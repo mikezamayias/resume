@@ -10,6 +10,7 @@
 \usepackage[a4paper, margin=1cm]{geometry}
 \usepackage{polyglossia}
 \usepackage{fontspec}
+\usepackage{moresize}
 \usepackage{minted}
 \usepackage{amsmath}
 \usepackage{paracol}
@@ -21,7 +22,10 @@
 \usepackage[hidelinks]{hyperref}
 
 % debugging
-\usepackage{showframe}
+% \usepackage{showframe}
+
+% provides \isempty test
+\usepackage{xstring, xifthen}
 
 % tikz stuff
 \usetikzlibrary{shapes, backgrounds,mindmap, trees}
@@ -78,11 +82,25 @@
   \\
 }
 
+% Renders a button.
+% param 1: link
+% param 2: icon
+% param 3: icon size
+\newcommand{\button}[3]{
+  \href{#1}{\textcolor{violet}{\vcenteredhbox{#3#2}}}
+}
+
 % Renders an active social media button.
 % param 1: link
-% param 1: icon
-\newcommand{\socialbutton}[2]{
-  \href{#1}{\textcolor{violet}{\vcenteredhbox{\Huge#2}}}
+% param 2: icon
+\newcommand{\socialmediabutton}[2]{
+  \button{#1}{#2}{\Huge}
+}
+
+% Renders an extenral link button.
+% param 1: link
+\newcommand{\externallinkbutton}[1]{
+  \button{#1}{\faExternalLinkSquare}\small
 }
 
 % Renders a progress-bar to indicate a certain skill in percent.
@@ -92,24 +110,58 @@
 \newcommand{\cvskill}[3] {
   \indent
 	\begin{tabular*}{1\mpwidth}{p{0.63\mpwidth}  r}
-    \textcolor{dark}{\textbf{#1}} & \textcolor{violet}{#2}
+    \textcolor{dark}{\textbf{#1}} & \textcolor{green}{#2}
 	\end{tabular*}
   \\[-0.1cm]
   \indent
 	\begin{tabular}{r}
     \begin{tikzpicture}[scale=1,rounded corners=2.1pt,very thin]
       \fill [light] (0,0) rectangle (1\mpwidth, 0.15);
-      \fill [violet] (0,0) rectangle (#3\mpwidth, 0.15);
+      \fill [green] (0,0) rectangle (#3\mpwidth, 0.15);
     \end{tikzpicture}%
   \end{tabular}
 }
 
+% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
+% is glued together when a pagebreak appears).
+% Additional Information can be passed in text or list form (or other environments).
+% the work you did
+% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
+% param 2:	 event name (job position etc.)
+% param 3: Customer, Employer, Industry
+% param 4: Short description
+\newcommand{\cvevent}[4] {
+	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
+	% if you need more control on page breaks, remove the parbox
+	\indent
+  \parbox{\mpwidth}{
+		\begin{tabular*}{1\mpwidth}{p{0.69\mpwidth}  r}
+      \textcolor{dark}{\textbf{#2}} &
+      \colorbox{green}{\makebox[0.27\mpwidth]{\textcolor{light}{#1}}} \\
+			\textcolor{green}{\textbf{#3}} & \\
+      \textcolor{dark}{#4}
+		\end{tabular*}\\[4pt]
+	}
+	\\[4pt]
+}
+
+% Renders the title of the CV.
+% param 1: full name
+% param 2: occupation
+\newcommand{\cvtitle}[2]{
+  \begin{center}
+    \huge\textbf{\textcolor{dark}{#1}}\large\\[0.3cm]
+    \textcolor{green}{\rule{0.15\textwidth}{2.4pt}}\\[0.3cm]
+    \large\textcolor{dark}{#2}
+  \end{center}
+  \textcolor{green}{\rule{\mpwidth}{6pt}}
+}
 
 \begin{document}
 \columnratio{0.36}
 \setlength{\columnsep}{3em}
 \setlength{\columnseprule}{6pt}
-\colseprulecolor{green}
+\colseprulecolor{light}
 \begin{paracol}{2}
 \begin{leftcolumn}
 
@@ -117,10 +169,10 @@
 \cvsection{Επικοινωνία}
 \indent
 \begin{tabular}{r}
-  \socialbutton{mailto:mzamagias@gmail.com}{\faEnvelopeSquare}
-  \socialbutton{https://github.com/mzamayias}{\faGithubSquare}
-  \socialbutton{https://linkedin.com/in/mzamayias/}{\faLinkedinSquare}
-  \socialbutton{tel:+306942422485}{\faPhoneSquare}
+  \socialmediabutton{mailto:mzamagias@gmail.com}{\faEnvelopeSquare}
+  \socialmediabutton{https://github.com/mzamayias}{\faGithubSquare}
+  \socialmediabutton{https://linkedin.com/in/mzamayias/}{\faLinkedinSquare}
+  \socialmediabutton{tel:+306942422485}{\faPhoneSquare}
 \end{tabular}
 \vfill\null
 
@@ -150,7 +202,41 @@
 % \cvskill{Windows}{3+ χρόνια}{0.6}\\[0.6cm]
 % \cvskill{Linx}{3+ χρόνια}{0.6}\\[0.6cm]
 % \cvskill{macOS}{1+ χρόνια}{0.2}
-\newpage
 \end{leftcolumn}
+\begin{rightcolumn}
+
+\vfill\null
+\cvtitle{Μιχαήλ Ανάργυρος Ζαμάγιας}{Προπτυχιακός Σπουδαστής}
+
+\cvsection{Εκπαίδευση}
+\cvevent
+  {\textbf{2018 - παρών}}
+  {Τμήμα Μηχανικών Πληροφορικής, ΤΕΙ Κρήτης}
+  {Ηράκλειο, Ελλάδα}
+  {}
+\cvevent
+  {\textbf{14/06/2018}}
+  {Γενικό Λύκειο Κω "Οδυσσέας Ελύτης"}
+  {Κως, Ελλάδα}
+  {Βαθμός: Λίαν καλώς (17.3) \newline \externallinkbutton{https://drive.google.com/file/d/1N7O_5-ysh0rsrD5t_r9FQwRoQxkAag6_/view}}
+\cvevent
+  {\textbf{23/05/2015}}
+  {ECCE B2}
+  {Κως, Ελλάδα}
+  {Βαθμός: PASS \newline \externallinkbutton{https://drive.google.com/file/d/1I111gvvsEiY88U4-dooUpVSacpRH6nDA/view?usp=sharing} \externallinkbutton{https://drive.google.com/file/d/1NZyxrZrtbMhuUdYUVoCGei3wt2vjQEja/view?usp=sharing}}
+
+\cvsection{Εργασιακή Εμπειρία}
+\cvevent
+  {\textbf{08/2019}}
+  {ΞΕΝΟΔΟΧΕΙΑΚΑΙ ΚΑΙ ΤΟΥΡΙΣΤΙΚΑΙ ΕΠΙΧΕΙΡΗΣΕΙΣ Κ ΜΗΤΣΗΣ ΑΕ}
+  {Κως, Ελλάδα}
+  {Βοηθός Σερβιτόρου \newline
+  \externallinkbutton{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}
+  }
+
+\newpage
+\vfill\null
+
+\end{rightcolumn}
 \end{paracol}
 \end{document}
