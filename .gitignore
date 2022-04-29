@@ -1,3 +1,4 @@
+# latex stuff
 **.aux
 **.fdb_latexmk
 **.fls
@@ -6,3 +7,5 @@
 **.toc
 **.out
 **.synctex(busy)
+# files
+temp**
