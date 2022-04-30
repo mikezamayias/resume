@@ -15,11 +15,15 @@
 \usepackage{amsmath}
 \usepackage{paracol}
 \usepackage{tikz}
+\usepackage[autostyle,english=american]{csquotes}
 \usepackage{graphicx}
 \usepackage{multicol}
 \usepackage{xcolor}
 \usepackage{fontawesome}
 \usepackage[hidelinks]{hyperref}
+
+% csquotes stuff
+\MakeOuterQuote{"}
 
 % provides \isempty test
 \usepackage{xstring, xifthen}
@@ -42,7 +46,7 @@
 \setmonofont{FiraCode Nerd Font}
 
 % paragraph stuff
-\setlength{\parindent}{0.1cm}
+\setlength{\parindent}{0cm}
 
 % color stuff
 \definecolor{light}{HTML}{F3F3F3}
@@ -74,7 +78,8 @@
 % base class to wrap any text based stuff here. Renders like a paragraph.
 % Allows complex commands to be passed, too.
 % param 1: *any
-\newcommand{\cvtext}[1] {
+\newcommand{\cvtext}[1]{
+  \noindent
 	\begin{tabular*}{1\mpwidth}{p{0.98\mpwidth}}
 		\parbox{1\mpwidth}{#1}
 	\end{tabular*}
@@ -83,12 +88,12 @@
 % Renders a a CV section headline with a nice underline in accent color.
 % param 1: section title
 \newcommand{\cvsection}[1] {
-  \vspace{0.6cm}
+  % \vspace{0.6cm}
 	\cvtext{
-    \textbf{\LARGE{\textcolor{dark}{#1}}}\\[-6pt]
-    \textcolor{green}{ \rule{0.1\textwidth}{2.1pt} }\\
-  }
-  \\
+    \textbf{\LARGE{\textcolor{dark}{#1}}}\\[-4.2pt]
+    \textcolor{green}{\rule{0.09\textwidth}{2.4pt}}\\
+    }
+    \\[0.3cm]
 }
 
 % Renders a button.
@@ -118,10 +123,11 @@
 % param 3: percent, values range from 0 to 1
 \newcommand{\cvskill}[3] {
   \indent
+  \normalsize
 	\begin{tabular*}{1\mpwidth}{p{0.63\mpwidth}  r}
     \textcolor{dark}{\textbf{#1}} & \textcolor{green}{#2}
 	\end{tabular*}
-  \\[-0.1cm]
+  \\
   \indent
 	\begin{tabular}{r}
     \begin{tikzpicture}[scale=1,rounded corners=2.1pt,very thin]
@@ -129,7 +135,7 @@
       \fill [green] (0,0) rectangle (#3\mpwidth, 0.15);
     \end{tikzpicture}%
   \end{tabular}
-  \\[0.6cm]
+  \\[0.42cm]
 }
 
 % Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
@@ -145,15 +151,14 @@
 	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
 	% if you need more control on page breaks, remove the parbox
 	\indent
+  \normalsize
   \parbox{\mpwidth}{
 		\begin{tabular*}{1\mpwidth}{p{0.69\mpwidth}  r}
       \textcolor{dark}{\textbf{#2}} &
       \colorbox{green}{\makebox[0.27\mpwidth]{\textcolor{light}{#1}}} \\
 			\textcolor{green}{\textbf{#3}}
-      % \textcolor{dark}{#4} & \\
-      % \textit{#5}
-      \ifthenelse{\isempty{#4}}{}{#4\\}
-      \ifthenelse{\isempty{#5}}{}{\textit{#5}}
+      \ifthenelse{\isempty{#4}}{}{\\#4}
+      \ifthenelse{\isempty{#5}}{}{\\\textit{#5}}
 		\end{tabular*}
 	}
 	\\[0.6cm]
@@ -163,13 +168,10 @@
 % param 1: full name
 % param 2: occupation
 \newcommand{\cvtitle}[2]{
-  \begin{center}
-    \huge\textbf{\textcolor{dark}{#1}}\large\\[0.3cm]
-    \textcolor{green}{\rule{0.15\textwidth}{2.4pt}}\large\\[0.3cm]
-    \large\textcolor{dark}{#2}\\[0.3cm]
-    % \textcolor{green}{\rule{0.15\textwidth}{2.4pt}}\\[0.3cm]
-  \end{center}
-  % \textcolor{green}{\rule{\mpwidth}{6pt}}
+  \noindent
+  \huge\textbf{\textcolor{dark}{#1}}\\[0.3cm]
+  \textcolor{green}{\rule{0.18\textwidth}{4.2pt}}\\[0.3cm]
+  \large\textbf{\textcolor{dark}{#2}}
 }
 
 \newcommand{\selfie}{
@@ -183,16 +185,14 @@
 \columnratio{0.36}
 \setlength{\columnsep}{3em}
 \setlength{\columnseprule}{6pt}
-\colseprulecolor{light}
+\colseprulecolor{green}
 \begin{paracol}{2}
   \begin{leftcolumn}
-
-    \cvtitle{Μιχαήλ Ανάργυρος Ζαμάγιας}{Προπτυχιακός Σπουδαστής}
+    \vspace*{0.42cm}
+    \cvtitle{Μιχαήλ \newline Ανάργυρος \newline Ζαμάγιας}{Προπτυχιακός Σπουδαστής}
     \vfill\null
-
     \selfie
     \vfill\null
-
     \cvsection{Επικοινωνία}
     \indent
     \begin{tabular}{r}
@@ -202,7 +202,7 @@
       \socialmediabutton{tel:+306942422485}{\faPhoneSquare}
     \end{tabular}
     \vfill\null
-
+    % \newpage
     \cvsection{Γνώσεις}
     \cvskill{Python}{5+ χρόνια}{1}
     \cvskill{Anaconda}{5+ χρόνια}{1}
@@ -210,31 +210,31 @@
     \cvskill{Flutter}{3+ χρόνια}{0.6}
     \cvskill{JS/TS, HTML, CSS}{1+ χρόνια}{0.2}
     \cvskill{Web Development}{1+ χρόνια}{0.2}
-
+    \cvskill{UI Design}{1+ χρόνια}{0.2}
     % \vfill\null
     % \cvsection{Γλώσσες}
     % \cvskill{C}{3+ χρόνια}{0.6}
     % \cvskill{Python}{5+ χρόνια}{1}
     % \cvskill{Dart}{3+ χρόνια}{0.6}
     % \cvskill{JS/TS, HTML, CSS}{<1 χρόνια}{0.2}
-
     % \cvsection{Framworks}
     % \cvskill{Anaconda}{4+ χρόνια}{0.8}
     % \cvskill{Flutter}{3+ χρόνια}{0.6}
     % \cvskill{Web Development}{1+ χρόνια}{0.2}
-
     % \cvsection{Λειτουργικά Συστήματα}
     % \cvskill{Windows}{3+ χρόνια}{0.6}
     % \cvskill{Linx}{3+ χρόνια}{0.6}
     % \cvskill{macOS}{1+ χρόνια}{0.2}
   \end{leftcolumn}
   \begin{rightcolumn}
-
+    \vspace*{0.42cm}
     \cvsection{Εκπαίδευση}
     \cvevent
     {\textbf{2018 - παρών}}
     {Τμήμα Μηχανικών Πληροφορικής, ΤΕΙ Κρήτης}
-    {Ηράκλειο, Ελλάδα}{}{}
+    {Ηράκλειο, Ελλάδα}
+    {}
+    {}
     \cvevent
     {\textbf{14/06/2018}}
     {Γενικό Λύκειο Κω "Οδυσσέας Ελύτης"}
@@ -248,45 +248,40 @@
     {Βαθμός: PASS}
     {\href{https://drive.google.com/file/d/1I111gvvsEiY88U4-dooUpVSacpRH6nDA/view}{Πιστοποιητικό}, \href{https://drive.google.com/file/d/1NZyxrZrtbMhuUdYUVoCGei3wt2vjQEja/view}{Αναφορά}}
     \vfill\null
-
     % \cvsection{Εργασιακή Εμπειρία}
     % \cvevent
-    %   {\textbf{08/2019}}
-    %   {ΞΕΝΟΔΟΧΕΙΑΚΑΙ ΚΑΙ ΤΟΥΡΙΣΤΙΚΑΙ ΕΠΙΧΕΙΡΗΣΕΙΣ Κ ΜΗΤΣΗΣ ΑΕ}
-    %   {Κως, Ελλάδα}
-    %   {Βοηθός Σερβιτόρου \newline
-    %   \externallinkbutton{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}
-    %   }
-    % \vfill\null
-
+    % {\textbf{08/2019}}
+    % {ΞΕΝΟΔΟΧΕΙΑΚΑΙ ΚΑΙ ΤΟΥΡΙΣΤΙΚΑΙ ΕΠΙΧΕΙΡΗΣΕΙΣ Κ ΜΗΤΣΗΣ ΑΕ}
+    % {Κως, Ελλάδα}
+    % {Βοηθός Σερβιτόρου}
+    % {\href{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}{Βεβαίωση Προϋπηρεσίας}}
+    % \newpage
     \cvsection{Projects}
     \cvevent
     {\textbf{2021}}
     {\href{https://github.com/mzamayias/flutter_ecommerce_website_demo}{flutter\_ecommerce\_website\_demo}}
     {Dart, Flutter}
-    {Ιστοσελίδα (διαδικτυακού εμπορίου). Το frontend είναι κατασκευασμένο με Flutter και το backend με Firebase.}
-    {Το project είναι μερικώς ολοκληρωμένο και ανενεργό, αλλά η ιστοσελίδα είναι διαθέσιμη \href{https://flutter-ecommerce-website-demo.web.app/}{εδώ}.}
+    {Ιστοσελίδα e-shop για κινητά. Το frontend είναι κατασκευασμένο με Flutter και το backend με Firebase.}
+    {Το project είναι ανενεργό και μερικώς ολοκληρωμένο, αλλά η ιστοσελίδα είναι διαθέσιμη \href{https://flutter-ecommerce-website-demo.web.app/}{εδώ}.}
     \cvevent
     {\textbf{2021}}
     {\href{https://github.com/mzamayias/qrapp}{qrapp}}
     {Dart, Flutter}
-    {Android και iOS εφαρμογή. Η εφαρμογή προσφέρει ανάγνωση και δημιουργία QR κωδικών και το ιστορικό αυτών.}
-    {Το project δεν είναι ολοκληρωμένο και η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
+    {Android και iOS εφαρμογή για ανάγνωση και δημιουργία QR κωδικών και το ιστορικό αυτών.}
+    {Το project είναι ανενεργό και δεν είναι ολοκληρωμένο. Η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
     \cvevent
     {\textbf{2020}}
     {\href{https://github.com/mzamayias/game_2048}{game\_2048}}
     {Dart, Flutter}
-    {Android και iOS εφαρμογή. Η εφαρμογή είναι υλοποίηση του παιχνιδιού \href{https://play2048.co}{2048}.}
-    {Το project δεν είναι ολοκληρωμένο και η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
+    {Android και iOS εφαρμογη για υλοποίηση του παιχνιδιού \href{https://play2048.co}{2048}.}
+    {Το project είναι ανενεργό και δεν είναι ολοκληρωμένο. Η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
     \cvevent
     {\textbf{2020}}
     {\href{https://github.com/mzamayias/ehealth_services_semester_project}{ehealth\_services\_semester\_project}}
     {Dart, Flutter}
-    {Android και iOS εφαρμογή. Η εφαρμογή οπτικοποιεί δεδομένα ύπνου, καρδιακού παλμού, βημάτων και θερμίδων από fitness tracker.}
-    {Το project δεν είναι ολοκληρωμένο και η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
-
+    {Android και iOS εφαρμογή για οπτικοποίηση δεδομένων ύπνου, καρδιακού παλμού, βημάτων και θερμίδων από fitness tracker.}
+    {Το project είναι ανενεργό και δεν είναι ολοκληρωμένο. Η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
     \newpage
-
   \end{rightcolumn}
 \end{paracol}
 \end{document}
