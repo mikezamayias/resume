@@ -7,5 +7,8 @@
 **.toc
 **.out
 **.synctex(busy)
-# files
+
+# otherfiles
 temp**
+**.png
+**.DS_Store
