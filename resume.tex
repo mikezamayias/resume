@@ -21,11 +21,11 @@
 \usepackage{fontawesome}
 \usepackage[hidelinks]{hyperref}
 
-% debugging
-% \usepackage{showframe}
-
 % provides \isempty test
 \usepackage{xstring, xifthen}
+
+% debugging
+% \usepackage{showframe}
 
 % tikz stuff
 \usetikzlibrary{shapes, backgrounds,mindmap, trees}
@@ -44,13 +44,22 @@
 % paragraph stuff
 \setlength{\parindent}{0.1cm}
 
-% colors
+% color stuff
 \definecolor{light}{HTML}{F3F3F3}
 \definecolor{dark}{HTML}{303030}
 \definecolor{violet}{HTML}{646CFF}
 \definecolor{blue}{HTML}{0078D4}
 \definecolor{green}{HTML}{41B883}
 \pagecolor{light}
+
+% hyperref stuff
+\hypersetup{
+  colorlinks=true,
+  linkcolor=violet,
+  filecolor=blue,
+  urlcolor=violet,
+  pdfpagemode=FullScreen,
+}
 
 % returns minipage width minus three times \fboxsep
 % to keep padding included in width calculations
@@ -94,13 +103,13 @@
 % param 1: link
 % param 2: icon
 \newcommand{\socialmediabutton}[2]{
-  \button{#1}{#2}{\Huge}
+  \button{#1}{#2}{\HUGE}\tiny
 }
 
 % Renders an extenral link button.
 % param 1: link
 \newcommand{\externallinkbutton}[1]{
-  \button{#1}{\faExternalLinkSquare}\small
+  \button{#1}{\faExternalLinkSquare}{\large}\tiny
 }
 
 % Renders a progress-bar to indicate a certain skill in percent.
@@ -120,6 +129,7 @@
       \fill [green] (0,0) rectangle (#3\mpwidth, 0.15);
     \end{tikzpicture}%
   \end{tabular}
+  \\[0.6cm]
 }
 
 % Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
@@ -127,10 +137,11 @@
 % Additional Information can be passed in text or list form (or other environments).
 % the work you did
 % param 1: time-frame i.e. Sep 14 - Jan 15 etc.
-% param 2:	 event name (job position etc.)
+% param 2: event name (job position etc.)
 % param 3: Customer, Employer, Industry
 % param 4: Short description
-\newcommand{\cvevent}[4] {
+% param 5: Notes
+\newcommand{\cvevent}[5] {
 	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
 	% if you need more control on page breaks, remove the parbox
 	\indent
@@ -138,11 +149,14 @@
 		\begin{tabular*}{1\mpwidth}{p{0.69\mpwidth}  r}
       \textcolor{dark}{\textbf{#2}} &
       \colorbox{green}{\makebox[0.27\mpwidth]{\textcolor{light}{#1}}} \\
-			\textcolor{green}{\textbf{#3}} & \\
-      \textcolor{dark}{#4}
-		\end{tabular*}\\[4pt]
+			\textcolor{green}{\textbf{#3}}
+      % \textcolor{dark}{#4} & \\
+      % \textit{#5}
+      \ifthenelse{\isempty{#4}}{}{#4\\}
+      \ifthenelse{\isempty{#5}}{}{\textit{#5}}
+		\end{tabular*}
 	}
-	\\[4pt]
+	\\[0.6cm]
 }
 
 % Renders the title of the CV.
@@ -151,11 +165,19 @@
 \newcommand{\cvtitle}[2]{
   \begin{center}
     \huge\textbf{\textcolor{dark}{#1}}\large\\[0.3cm]
-    \textcolor{green}{\rule{0.15\textwidth}{2.4pt}}\\[0.3cm]
-    \large\textcolor{dark}{#2}
+    \textcolor{green}{\rule{0.15\textwidth}{2.4pt}}\large\\[0.3cm]
+    \large\textcolor{dark}{#2}\\[0.3cm]
+    % \textcolor{green}{\rule{0.15\textwidth}{2.4pt}}\\[0.3cm]
   \end{center}
-  \textcolor{green}{\rule{\mpwidth}{6pt}}
+  % \textcolor{green}{\rule{\mpwidth}{6pt}}
 }
+
+\newcommand{\selfie}{
+  \includegraphics[width=\mpwidth]{selfie.png}
+}
+
+% remove page numbering
+\pagenumbering{gobble}
 
 \begin{document}
 \columnratio{0.36}
@@ -165,7 +187,12 @@
 \begin{paracol}{2}
 \begin{leftcolumn}
 
+\cvtitle{Μιχαήλ Ανάργυρος Ζαμάγιας}{Προπτυχιακός Σπουδαστής}
 \vfill\null
+
+\selfie
+\vfill\null
+
 \cvsection{Επικοινωνία}
 \indent
 \begin{tabular}{r}
@@ -176,66 +203,89 @@
 \end{tabular}
 \vfill\null
 
-
-\vfill\null
 \cvsection{Γνώσεις}
-\cvskill{Python}{5+ χρόνια}{1}\\[0.6cm]
-\cvskill{Anaconda}{5+ χρόνια}{1}\\[0.6cm]
-\cvskill{Dart}{3+ χρόνια}{0.6}\\[0.6cm]
-\cvskill{Flutter}{3+ χρόνια}{0.6}\\[0.6cm]
-\cvskill{JS/TS, HTML, CSS}{1+ χρόνια}{0.2}\\[0.6cm]
+\cvskill{Python}{5+ χρόνια}{1}
+\cvskill{Anaconda}{5+ χρόνια}{1}
+\cvskill{Dart}{3+ χρόνια}{0.6}
+\cvskill{Flutter}{3+ χρόνια}{0.6}
+\cvskill{JS/TS, HTML, CSS}{1+ χρόνια}{0.2}
 \cvskill{Web Development}{1+ χρόνια}{0.2}
 
 % \vfill\null
 % \cvsection{Γλώσσες}
-% \cvskill{C}{3+ χρόνια}{0.6}\\[0.6cm]
-% \cvskill{Python}{5+ χρόνια}{1}\\[0.6cm]
-% \cvskill{Dart}{3+ χρόνια}{0.6}\\[0.6cm]
+% \cvskill{C}{3+ χρόνια}{0.6}
+% \cvskill{Python}{5+ χρόνια}{1}
+% \cvskill{Dart}{3+ χρόνια}{0.6}
 % \cvskill{JS/TS, HTML, CSS}{<1 χρόνια}{0.2}
 
 % \cvsection{Framworks}
-% \cvskill{Anaconda}{4+ χρόνια}{0.8}\\[0.6cm]
-% \cvskill{Flutter}{3+ χρόνια}{0.6}\\[0.6cm]
+% \cvskill{Anaconda}{4+ χρόνια}{0.8}
+% \cvskill{Flutter}{3+ χρόνια}{0.6}
 % \cvskill{Web Development}{1+ χρόνια}{0.2}
 
 % \cvsection{Λειτουργικά Συστήματα}
-% \cvskill{Windows}{3+ χρόνια}{0.6}\\[0.6cm]
-% \cvskill{Linx}{3+ χρόνια}{0.6}\\[0.6cm]
+% \cvskill{Windows}{3+ χρόνια}{0.6}
+% \cvskill{Linx}{3+ χρόνια}{0.6}
 % \cvskill{macOS}{1+ χρόνια}{0.2}
 \end{leftcolumn}
 \begin{rightcolumn}
-
-\vfill\null
-\cvtitle{Μιχαήλ Ανάργυρος Ζαμάγιας}{Προπτυχιακός Σπουδαστής}
 
 \cvsection{Εκπαίδευση}
 \cvevent
   {\textbf{2018 - παρών}}
   {Τμήμα Μηχανικών Πληροφορικής, ΤΕΙ Κρήτης}
-  {Ηράκλειο, Ελλάδα}
-  {}
+  {Ηράκλειο, Ελλάδα}{}{}
 \cvevent
   {\textbf{14/06/2018}}
   {Γενικό Λύκειο Κω "Οδυσσέας Ελύτης"}
   {Κως, Ελλάδα}
-  {Βαθμός: Λίαν καλώς (17.3) \newline \externallinkbutton{https://drive.google.com/file/d/1N7O_5-ysh0rsrD5t_r9FQwRoQxkAag6_/view}}
+  {Βαθμός: Λίαν καλώς (17.3)}
+  {\href{https://drive.google.com/file/d/1N7O_5-ysh0rsrD5t_r9FQwRoQxkAag6_/view}{Απολυτήριο Λυκείου}}
 \cvevent
   {\textbf{23/05/2015}}
   {ECCE B2}
   {Κως, Ελλάδα}
-  {Βαθμός: PASS \newline \externallinkbutton{https://drive.google.com/file/d/1I111gvvsEiY88U4-dooUpVSacpRH6nDA/view?usp=sharing} \externallinkbutton{https://drive.google.com/file/d/1NZyxrZrtbMhuUdYUVoCGei3wt2vjQEja/view?usp=sharing}}
+  {Βαθμός: PASS}
+  {\href{https://drive.google.com/file/d/1I111gvvsEiY88U4-dooUpVSacpRH6nDA/view}{Πιστοποιητικό}, \href{https://drive.google.com/file/d/1NZyxrZrtbMhuUdYUVoCGei3wt2vjQEja/view}{Αναφορά}}
+\vfill\null
 
-\cvsection{Εργασιακή Εμπειρία}
+% \cvsection{Εργασιακή Εμπειρία}
+% \cvevent
+%   {\textbf{08/2019}}
+%   {ΞΕΝΟΔΟΧΕΙΑΚΑΙ ΚΑΙ ΤΟΥΡΙΣΤΙΚΑΙ ΕΠΙΧΕΙΡΗΣΕΙΣ Κ ΜΗΤΣΗΣ ΑΕ}
+%   {Κως, Ελλάδα}
+%   {Βοηθός Σερβιτόρου \newline
+%   \externallinkbutton{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}
+%   }
+% \vfill\null
+
+\cvsection{Projects}
 \cvevent
-  {\textbf{08/2019}}
-  {ΞΕΝΟΔΟΧΕΙΑΚΑΙ ΚΑΙ ΤΟΥΡΙΣΤΙΚΑΙ ΕΠΙΧΕΙΡΗΣΕΙΣ Κ ΜΗΤΣΗΣ ΑΕ}
-  {Κως, Ελλάδα}
-  {Βοηθός Σερβιτόρου \newline
-  \externallinkbutton{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}
-  }
+  {\textbf{2021}}
+  {\href{https://github.com/mzamayias/flutter_ecommerce_website_demo}{flutter\_ecommerce\_website\_demo}}
+  {Dart, Flutter}
+  {Ιστοσελίδα (διαδικτυακού εμπορίου). Το fronend είναι κατασκευασμένο με Flutter και το backend με Firebase.}
+  {Το project είναι μερικώς ολοκλημένο και ανενεργό, αλλά η ιστοσελίδα είναι διαθέσιμη \href{https://flutter-ecommerce-website-demo.web.app/}{εδώ}.}
+\cvevent
+  {\textbf{2021}}
+  {\href{https://github.com/mzamayias/qrapp}{qrapp}}
+  {Dart, Flutter}
+  {Android και iOS εφαρμογή. Η εφαρμογή προσφέρει ανάγνωση και δημιουργεία QR κωδικών και το ιστορικό αυτών.}
+  {Το project δεν είναι ολοκλημένο και η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
+\cvevent
+  {\textbf{2020}}
+  {\href{https://github.com/mzamayias/game_2048}{game\_2048}}
+  {Dart, Flutter}
+  {Android και iOS εφαρμογή. Η εφαρμογή είναι υλοποίηση του παιχνιδιού \href{https://play2048.co}{2048}.}
+  {Το project δεν είναι ολοκλημένο και η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
+\cvevent
+  {\textbf{2020}}
+  {\href{https://github.com/mzamayias/ehealth_services_semester_project}{ehealth\_services\_semester\_project}}
+  {Dart, Flutter}
+  {Android και iOS εφαρμογή. Η εφαρμογή οπτικοποιεί δεδομένα ύπνου, καρδιακού παλμού, βημάτων και θερμίδων από fitness tracker.}
+  {Το project δεν είναι ολοκλημένο και η εφαρμογή δεν είναι διαθέσιμη στο διαδίκτυο.}
 
 \newpage
-\vfill\null
 
 \end{rightcolumn}
 \end{paracol}
