@@ -1,0 +1,284 @@
+% Copyright (c) 2022 Mike Zamayias All rights reserved.
+% Use of this source code is governed by a BSD-style
+% license that can be found in the LICENSE file.
+
+% !TEX TS-program = XeLaTeX
+% !TEX encoding = UTF-8 Unicode
+% !TEX spellverify = gr-GR
+
+\documentclass[10pt]{article}
+\usepackage[a4paper, margin=1cm]{geometry}
+\usepackage{polyglossia}
+\usepackage{fontspec}
+\usepackage{moresize}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{paracol}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{fontawesome}
+\usepackage[hidelinks]{hyperref}
+
+% provides \isempty test
+\usepackage{xstring, xifthen}
+
+% debugging
+% \usepackage{showframe}
+
+% tikz stuff
+\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+
+% polyglossia stuff
+\setdefaultlanguage{greek}
+\setotherlanguage{english}
+
+% fontspec stuff
+\newfontfamily\greekfont{JetBrains Mono}
+\newfontfamily\greekfontsf{JetBrains Mono}
+\setmainfont{JetBrains Mono}
+\setsansfont{JetBrains Mono}
+\setmonofont{FiraCode Nerd Font}
+
+% paragraph stuff
+\setlength{\parindent}{0cm}
+
+% color stuff
+\definecolor{light}{HTML}{F3F3F3}
+\definecolor{dark}{HTML}{303030}
+\definecolor{violet}{HTML}{646CFF}
+\definecolor{blue}{HTML}{0078D4}
+\definecolor{green}{HTML}{41B883}
+\pagecolor{light}
+
+% hyperref stuff
+\hypersetup{
+  colorlinks=true,
+  linkcolor=violet,
+  filecolor=blue,
+  urlcolor=violet,
+  pdfpagemode=FullScreen,
+}
+
+% returns minipage width minus three times \fboxsep
+% to keep padding included in width calculations
+% can also be used for other boxes / environments
+\newcommand{\mpwidth}{\linewidth-3\fboxsep}
+
+% centers text vertically in line: https://tex.stackexchange.com/a/17102
+% param 1: any
+\newcommand*{\vcenteredhbox}[1]{\begingroup
+\setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
+
+% base class to wrap any text based stuff here. Renders like a paragraph.
+% Allows complex commands to be passed, too.
+% param 1: *any
+\newcommand{\cvtext}[1]{
+  \noindent
+	\begin{tabular*}{1\mpwidth}{p{0.98\mpwidth}}
+		\parbox{1\mpwidth}{#1}
+	\end{tabular*}
+}
+
+% Renders a a CV section headline with a nice underline in accent color.
+% param 1: section title
+\newcommand{\cvsection}[1] {
+  % \vspace{0.6cm}
+	\cvtext{
+    \textbf{\LARGE{\textcolor{dark}{#1}}}\\[-4.2pt]
+    \textcolor{green}{\rule{0.09\textwidth}{2.4pt}}\\
+    }
+    \\[0.3cm]
+}
+
+% Renders a button.
+% param 1: link
+% param 2: icon
+% param 3: icon size
+\newcommand{\button}[3]{
+  \href{#1}{\textcolor{violet}{\vcenteredhbox{#3#2}}}
+}
+
+% Renders an active social media button.
+% param 1: link
+% param 2: icon
+\newcommand{\socialmediabutton}[2]{
+  \button{#1}{#2}{\HUGE}\tiny
+}
+
+% Renders an external link button.
+% param 1: link
+\newcommand{\externallinkbutton}[1]{
+  \button{#1}{\faExternalLinkSquare}{\large}\tiny
+}
+
+% Renders a progress-bar to indicate a certain skill in percent.
+% param 1: name of the skill / tech / etc.
+% param 2: level (for example in years)
+% param 3: percent, values range from 0 to 1
+\newcommand{\cvskill}[3] {
+  \indent
+  \normalsize
+	\begin{tabular*}{1\mpwidth}{p{0.63\mpwidth}  r}
+    \textcolor{dark}{\textbf{#1}} & \textcolor{green}{#2}
+	\end{tabular*}
+  \\[-0.12cm]
+  \indent
+	\begin{tabular}{r}
+    \begin{tikzpicture}[scale=1,rounded corners=2.1pt,very thin]
+      \fill [light] (0,0) rectangle (1\mpwidth, 0.15);
+      \fill [green] (0,0) rectangle (#3\mpwidth, 0.15);
+    \end{tikzpicture}%
+  \end{tabular}
+  \\[0.42cm]
+}
+
+% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
+% is glued together when a pagebreak appears).
+% Additional Information can be passed in text or list form (or other environments).
+% the work you did
+% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
+% param 2: event name (job position etc.)
+% param 3: Customer, Employer, Industry
+% param 4: Short description
+% param 5: Notes
+\newcommand{\cvevent}[5] {
+	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
+	% if you need more control on page breaks, remove the parbox
+	\indent
+  \normalsize
+  \parbox{\mpwidth}{
+		\begin{tabular*}{1\mpwidth}{p{0.69\mpwidth}  r}
+      \textcolor{dark}{\textbf{#2}} &
+      \colorbox{green}{\makebox[0.27\mpwidth]{\textcolor{light}{#1}}} \\
+			\textcolor{green}{\textbf{#3}}
+      \ifthenelse{\isempty{#4}}{}{\\#4}
+      \ifthenelse{\isempty{#5}}{}{\\\textit{#5}}
+		\end{tabular*}
+	}
+	\\[0.6cm]
+}
+
+% Renders the title of the CV.
+% param 1: full name
+% param 2: occupation
+\newcommand{\cvtitle}[2]{
+  \noindent
+  \huge\textbf{\textcolor{dark}{#1}}\\[0.3cm]
+  \textcolor{green}{\rule{0.18\textwidth}{4.2pt}}\\[0.3cm]
+  \large\textbf{\textcolor{dark}{#2}}
+}
+
+\newcommand{\selfie}{
+  \includegraphics[width=\mpwidth]{selfie.png}
+}
+
+% remove page numbering
+\pagenumbering{gobble}
+
+\begin{document}
+\columnratio{0.36}
+\setlength{\columnsep}{3em}
+\setlength{\columnseprule}{6pt}
+\colseprulecolor{green}
+\begin{paracol}{2}
+  \begin{leftcolumn}
+    \vspace*{0.42cm}
+    \cvtitle{Mike \\ Zamayias}{Undergraduate Student}
+    \vfill\null
+    \selfie
+    \vfill\null
+    \cvsection{Contact}
+    \indent
+    \begin{tabular}{r}
+      \socialmediabutton{mailto:mzamagias@gmail.com}{\faEnvelopeSquare}
+      \socialmediabutton{https://github.com/mzamayias}{\faGithubSquare}
+      \socialmediabutton{https://linkedin.com/in/mzamayias/}{\faLinkedinSquare}
+      \socialmediabutton{tel:+306942422485}{\faPhoneSquare}
+    \end{tabular}
+    \vfill\null
+    % \newpage
+    \cvsection{Skills}
+    \cvskill{Python}{5+ years}{1}
+    \cvskill{Anaconda}{5+ years}{1}
+    \cvskill{Dart}{3+ years}{0.6}
+    \cvskill{Flutter}{3+ years}{0.6}
+    \cvskill{JS/TS, HTML, CSS}{1+ years}{0.2}
+    \cvskill{Web Development}{1+ years}{0.2}
+    \cvskill{UI Design}{1+ years}{0.2}
+    % \vfill\null
+    % \cvsection{Γλώσσες}
+    % \cvskill{C}{3+ years}{0.6}
+    % \cvskill{Python}{5+ years}{1}
+    % \cvskill{Dart}{3+ years}{0.6}
+    % \cvskill{JS/TS, HTML, CSS}{<1 years}{0.2}
+    % \cvsection{Framworks}
+    % \cvskill{Anaconda}{4+ years}{0.8}
+    % \cvskill{Flutter}{3+ years}{0.6}
+    % \cvskill{Web Development}{1+ years}{0.2}
+    % \cvsection{Λειτουργικά Συστήματα}
+    % \cvskill{Windows}{3+ years}{0.6}
+    % \cvskill{Linx}{3+ years}{0.6}
+    % \cvskill{macOS}{1+ years}{0.2}
+  \end{leftcolumn}
+  \begin{rightcolumn}
+    \vspace*{0.42cm}
+    \cvsection{Education}
+    \cvevent
+    {\textbf{2018 - now}}
+    {Informatics Engineering Department, TEI of Crete}
+    {Herakleion, Greece}
+    {}
+    {}
+    \cvevent
+    {\textbf{14/06/2018}}
+    {General Lyceum of Kos "Odysseas Elytis"}
+    {Kos, Greece}
+    {Grade: Very Good (17.3)}
+    {\href{https://drive.google.com/file/d/1N7O_5-ysh0rsrD5t_r9FQwRoQxkAag6_/view}{General Lyceum Certificate}}
+    \cvevent
+    {\textbf{23/05/2015}}
+    {ECCE B2}
+    {Kos, Greece}
+    {Grade: PASS}
+    {\href{https://drive.google.com/file/d/1I111gvvsEiY88U4-dooUpVSacpRH6nDA/view}{Certificate}, \href{https://drive.google.com/file/d/1NZyxrZrtbMhuUdYUVoCGei3wt2vjQEja/view}{Report}}
+    \vfill\null
+    % \cvsection{Εργασιακή Εμπειρία}
+    % \cvevent
+    % {\textbf{08/2019}}
+    % {ΞΕΝΟΔΟΧΕΙΑΚΑΙ ΚΑΙ ΤΟΥΡΙΣΤΙΚΑΙ ΕΠΙΧΕΙΡΗΣΕΙΣ Κ ΜΗΤΣΗΣ ΑΕ}
+    % {Κως, Ελλάδα}
+    % {Βοηθός Σερβιτόρου}
+    % {\href{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}{Βεβαίωση Προϋπηρεσίας}}
+    % \newpage
+    \cvsection{University Work}
+    \cvevent
+    {\textbf{2021}}
+    {\href{https://github.com/mzamayias/flutter_ecommerce_website_demo}{flutter\_ecommerce\_website\_demo}}
+    {Dart, Flutter}
+    {E-commerce website. The frontend is made with Flutter and the backend (user authentication, database) with Firebase. A simple CI/CD pipeline by GitHub Actions is used to deploy the website.}
+    {The website is available \href{https://flutter-ecommerce-website-demo.web.app/}{here}.}
+    \cvevent
+    {\textbf{2021}}
+    {\href{https://github.com/mzamayias/qrapp}{qrapp}}
+    {Dart, Flutter}
+    {Android and iOS application for scanning and creating QR codes, while also keeping their history.}
+    {}
+    \cvevent
+    {\textbf{2020}}
+    {\href{https://github.com/mzamayias/game_2048}{game\_2048}}
+    {Dart, Flutter}
+    % {Android και iOS εφαρμογη για υλοποίηση του παιχνιδιού \href{https://play2048.co}{2048}.}
+    {Implementation of the game \href{https://play2048.co}{2048} using Flutter for Android and iOS.}
+    {}
+    \cvevent
+    {\textbf{2020}}
+    {\href{https://github.com/mzamayias/ehealth_services_semester_project}{ehealth\_services\_semester\_project}}
+    {Dart, Flutter}
+    {Android and iOS application for data visualization of sleep, heart rate, steps and calories from a fitness tracker.}
+    {}
+    \newpage
+  \end{rightcolumn}
+\end{paracol}
+\end{document}
