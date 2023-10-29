@@ -1,0 +1,203 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\textheight=10in
+\pagestyle{empty}
+\raggedright
+\usepackage[left=0.5in,right=0.5in,bottom=0.5in,top=0.5in]{geometry}
+
+%\renewcommand{\encodingdefault}{cg}
+%\renewcommand{\rmdefault}{lgrcmr}
+\def\bull{\vrule height 0.8ex width .7ex depth -.1ex }
+% DEFINITIONS FOR RESUME
+\newcommand{\area} [2] {
+	\vspace*{-9pt}
+	\begin{verse}
+		\textbf{#1}   #2
+	\end{verse}
+}
+\newcommand{\lineunder} {
+	\vspace*{-8pt} \\
+	\hspace*{-18pt} \hrulefill \\
+}
+\newcommand{\header} [1] {
+	\vspace*{2mm}
+	{\hspace*{-18pt}\vspace*{6pt} \textsc{#1}}
+	\vspace*{-6pt} \lineunder
+}
+\newcommand{\education}[4]{ % Define a new command with 4 arguments
+	\textbf{#1} \hfill #3 \\ % Title and place
+	#2 \hfill #4 \\ % Description and dates
+	\vspace*{2mm}
+}
+\newcommand{\workexperience}[5]{ % Define a new command with 4 arguments
+	\textbf{#1} \hfill #2 \\ % Title and place
+	\textit{#3} \hfill #4 \\ % Short Description and dates
+	#5 % Description
+	\vspace*{2mm}
+}
+\newcommand{\project}[3]{%
+	{\textbf{#1}} \hfill {\sl #2 } \\
+	#3 \\
+	\vspace*{2mm}
+}
+\newcommand{\award}[4]{%
+	\textbf{#1}\hfill #2 \\
+	#3\hfill #4\\
+	\vspace*{2mm}
+}
+\newcommand{\socialmediabutton}[2]{%
+	\href{#1}{#2}
+}
+% END RESUME DEFINITIONS
+
+\begin{document}
+\vspace*{-40pt}
+
+
+%==== Profile ====%
+\begin{center}
+	{\Huge \scshape {Mike Zamayias}}\\
+	% Herakleion, Greece $\cdot$    {[}email protected{]} $\cdot$    +1234567890 $\cdot$    linkedin.com/in/mikezamayias \
+	Herakleion, Greece $\cdot$ \socialmediabutton{mailto:contact@mikezamayias.com}{Email} $\cdot$ \socialmediabutton{https://linkedin.com/in/mikezamayias}{LinkedIn} $\cdot$ \socialmediabutton{https://mikezamayias.com}{Website}
+\end{center}
+
+
+%==== Education ====%
+\header{Education}
+\education
+{Bachelors in Informatics Engineering, TEI of Crete}
+{Undergraduate Student}
+{Herakleion, Greece}
+{2018 -  Present}
+\education
+{General Lyceum of Kos "Odysseas Elytis"}
+{Grade: Very Good (17.3)}
+{Kos, Greece}
+{2018}
+
+
+%==== Experience ====%
+\header{Work Experience}
+\workexperience
+{Software Engineer Intern at TEI of Crete}
+{Herakleion, Greece}
+{Architected a mobile application project from start to finish.}
+{May 2023 - November 2023}
+{
+	\begin{itemize} \itemsep 1pt
+		\item The application (named \textit{Healpen}) is a journal that allows users to express their feelings and thoughts. It also performs sentiment analysis on their entries, providing data for visualizing their mood.
+		\item Designed the application in Figma, developed it using Flutter, implemented CI/CD using GitHub Actions and utilized Firebase for the backend and Google's Natural Language API for sentiment analysis.
+	\end{itemize}
+}
+\workexperience
+{Main and Pool Bar Waiter at "Ramira" Beach Hotel}
+{Kos, Greece}
+{Assisted in daily operations during high-traffic periods.}
+{August 2022}
+{
+	\begin{itemize} \itemsep 1pt
+		\item Supported team members during peak hours to maintain operations.
+		\item Handled customer interactions in a busy setting.
+	\end{itemize}
+}
+\workexperience
+{Main Bar Waiter Assistant at "Ramira" Beach Hotel}
+{Kos, Greece}
+{Aided in ensuring a positive customer experience.}
+{August 2019}
+{
+	\begin{itemize} \itemsep 1pt
+		\item Assisted staff during busy hours to maintain a pleasant environment for guests.
+		\item Supported team members in daily operations.
+	\end{itemize}
+}
+
+
+
+%==== Skills ====%
+\header{Skills}
+\begin{tabular}{ l l }
+	Programming Languages: & Python, Dart, JS/TS, HTML, CSS, Shell                    \\
+	Frameworks:            & Anaconda, Flutter, Nuxt3                                 \\
+	Tools:                 & GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs \\
+	Computer Proficiency:  & Mobile app development, software architecture            \\
+\end{tabular}
+\vspace{2mm}
+
+
+%==== Projects ====%
+\header{Projects}
+\project
+{\href
+	{https://github.com/mikezamayias/healpen}
+	{Healpen}
+}
+{Flutter, Full Stack, Firebase, Rive, CI/CD, UI Design}
+{The "expressive writing" method has been clinically proven to enhance emotional well-being. Healpen is a journaling platform that allows users to freely express their thoughts and emotions. Through sentiment analysis, Healpen generates mood-based data visualizations from users' journal entries. The application is designed in Figma, built using Flutter and Firebase, with GitHub Actions handling the CI/CD pipeline.}
+
+\project
+{\href
+	{mikezamayias.com}
+	{mikezamayias.com}
+}
+{Nuxt3, TailwindCSS, Cloudflare, Firebase, CI/CD}
+{My personal website has been created and designed using Nuxt3 and TailwindCSS. It was successfully deployed through Firebase Hosting. A CI/CD pipeline has been established through GitHub Actions. Additionally, Cloudflare has been configured for domain name management.}
+
+\project
+{\href
+	{https://github.com/mikezamayias/flutter_ecommerce_website_demo}
+	{flutter\_ecommerce\_website\_demo}
+}
+{Flutter, Firebase, CI/CD, Full Stack}
+{A demo e-commerce website was implemented using Dart and Flutter. The frontend was developed using Flutter and the backend, including user authentication and database, was handled with Firebase. The website was deployed through a simple CI/CD pipeline utilizing GitHub Actions.}
+
+\project
+{\href
+	{https://github.com/mikezamayias/qrapp}
+	{qrapp}
+}
+{Flutter, QR Code}
+{Designed and built an Android and iOS application for scanning and creating QR codes, complete with a history feature.}
+
+\project
+{\href
+	{https://github.com/mikezamayias/game_2048}
+	{game\_2048}
+}
+{Flutter, Mobile Game}
+{A Flutter implementation of the popular game 2048.}
+
+\project
+{\href
+	{https://github.com/mikezamayias/ehealth_services_semester_project}
+	{ehealth\_services\_semester\_project}
+}
+{Flutter, Fitness Tracker, Health Data}
+{An application was developed for visualizing data on sleep, heart rate, steps, and calories from a fitness tracker.}
+
+
+%==== Awards ====%
+\header{Awards}
+\award
+{First Place Certificate}
+{First ATHENA Student Hackathon}
+{Developed an innovative solution for responsible consumption and production.}
+{April 2023}
+\award
+{General Lyceum Certificate}
+{General Lyceum of Kos "Odysseas Elytis"}
+{Grade: Very Good (17.3)}
+{14/06/2018}
+\award
+{ECCE B2 Certificate}
+{Examination for the Certificate of Competency in English}
+{Grade: Pass}
+{2015}
+
+\end{document}
