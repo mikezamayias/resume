@@ -15,41 +15,32 @@
 %\renewcommand{\rmdefault}{lgrcmr}
 \def\bull{\vrule height 0.8ex width .7ex depth -.1ex }
 % DEFINITIONS FOR RESUME
-\newcommand{\area} [2] {
-	\vspace*{-9pt}
-	\begin{verse}
-		\textbf{#1}   #2
-	\end{verse}
-}
 \newcommand{\lineunder} {
 	\vspace*{-8pt} \\
 	\hspace*{-18pt} \hrulefill \\
 }
 \newcommand{\header} [1] {
-	\vspace*{2mm}
+	\vspace*{6mm}
 	{\hspace*{-18pt}\vspace*{6pt} \textsc{#1}}
 	\vspace*{-6pt} \lineunder
 }
 \newcommand{\education}[4]{ % Define a new command with 4 arguments
-	\textbf{#1} \hfill #3 \\ % Title and place
+	\paragraph{#1} \hfill #3 \\ % Title and place
 	#2 \hfill #4 \\ % Description and dates
-	\vspace*{2mm}
 }
 \newcommand{\workexperience}[5]{ % Define a new command with 4 arguments
-	\textbf{#1} \hfill #2 \\ % Title and place
+	\paragraph{#1} \hfill #2 \\ % Title and place
 	\textit{#3} \hfill #4 \\ % Short Description and dates
 	#5 % Description
-	\vspace*{2mm}
 }
-\newcommand{\project}[3]{%
-	{\textbf{#1}} \hfill {\sl #2 } \\
+\newcommand{\project}[4]{%
+	\paragraph{#1} \hfill #4 \\
+	\textit{#2} \\
 	#3 \\
-	\vspace*{2mm}
 }
 \newcommand{\award}[4]{%
-	\textbf{#1}\hfill #2 \\
+	\paragraph{#1} \hfill #2 \\
 	#3\hfill #4\\
-	\vspace*{2mm}
 }
 \newcommand{\socialmediabutton}[2]{%
 	\href{#1}{#2}
@@ -57,7 +48,7 @@
 % END RESUME DEFINITIONS
 
 \begin{document}
-\vspace*{-40pt}
+\vspace*{-30pt}
 
 
 %==== Profile ====%
@@ -77,7 +68,7 @@
 {October 2018 -  Present}
 \education
 {General Lyceum of Kos "Odysseas Elytis"}
-{Grade: Very Good (17.3)}
+{High School Diploma}
 {Kos, Greece}
 {June 2018}
 
@@ -88,7 +79,7 @@
 {Software Engineer Intern at TEI of Crete}
 {Herakleion, Greece}
 {Architected a mobile application project from start to finish.}
-{May 2023 - November 2023}
+{May 2023 - Present}
 {
 	\begin{itemize} \itemsep 1pt
 		\item The application (named \textit{Healpen}) is a journal that allows users to express their feelings and thoughts. It also performs sentiment analysis on their entries, providing data for visualizing their mood.
@@ -122,10 +113,11 @@
 
 %==== Skills ====%
 \header{Skills}
+\vspace*{6mm}
 \begin{tabular}{ l l }
-	Programming Languages: & Python, Dart, JS/TS, HTML, CSS, Shell                    \\
+	Programming Languages: & Python, Dart, JS/TS, HTML, CSS, Shell, Yaml                    \\
 	Frameworks:            & Anaconda, Flutter, Nuxt3                                 \\
-	Tools:                 & GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs \\
+	Tools:                 & Git, GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs \\
 	Computer Proficiency:  & Mobile app development, software architecture            \\
 \end{tabular}
 \vspace{2mm}
@@ -140,6 +132,7 @@
 }
 {Flutter, Full Stack, Firebase, Rive, CI/CD, UI Design}
 {The "expressive writing" method has been clinically proven to enhance emotional well-being. Healpen is a journaling platform that allows users to freely express their thoughts and emotions. Through sentiment analysis, Healpen generates mood-based data visualizations from users' journal entries. The application is designed in Figma, built using Flutter and Firebase, with GitHub Actions handling the CI/CD pipeline.}
+{May 2023 - Present}
 
 \project
 {\href
@@ -148,6 +141,7 @@
 }
 {Nuxt3, TailwindCSS, Cloudflare, Firebase, CI/CD}
 {My personal website has been created and designed using Nuxt3 and TailwindCSS. It was successfully deployed through Firebase Hosting. A CI/CD pipeline has been established through GitHub Actions. Additionally, Cloudflare has been configured for domain name management.}
+{January 2023 - Present}
 
 \project
 {\href
@@ -156,6 +150,7 @@
 }
 {Flutter, Firebase, CI/CD, Full Stack}
 {A demo e-commerce website was implemented using Dart and Flutter. The frontend was developed using Flutter and the backend, including user authentication and database, was handled with Firebase. The website was deployed through a simple CI/CD pipeline utilizing GitHub Actions.}
+{January 2022 - Febuary 2022}
 
 \project
 {\href
@@ -164,6 +159,7 @@
 }
 {Flutter, QR Code}
 {Designed and built an Android and iOS application for scanning and creating QR codes, complete with a history feature.}
+{September 2021 - June 2022}
 
 \project
 {\href
@@ -172,6 +168,7 @@
 }
 {Flutter, Mobile Game}
 {A Flutter implementation of the popular game 2048.}
+{June 2021 - June 2021}
 
 \project
 {\href
@@ -180,23 +177,24 @@
 }
 {Flutter, Fitness Tracker, Health Data}
 {An application was developed for visualizing data on sleep, heart rate, steps, and calories from a fitness tracker.}
+{January 2021 - January 2021}
 
 
 %==== Awards ====%
 \header{Awards}
 \award
-{First Place Certificate}
 {First ATHENA Student Hackathon}
+{First Place Certificate}
 {Developed an innovative solution for responsible consumption and production.}
 {April 2023}
 \award
-{General Lyceum Certificate}
 {General Lyceum of Kos "Odysseas Elytis"}
+{High School Diploma}
 {Grade: Very Good (17.3)}
 {June 2018}
 \award
-{ECCE B2 Certificate}
 {Examination for the Certificate of Competency in English}
+{ECCE B2 Certificate}
 {Grade: Pass}
 {May 2015}
 
