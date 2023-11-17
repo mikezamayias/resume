@@ -1,177 +1,513 @@
-\documentclass[a4paper, 11pt]{article}
-\usepackage{fullpage}
+% Copyright (c) 2022 Mike Zamayias All rights reserved.
+% Use of this source code is governed by a BSD-style
+% license that can be found in the LICENSE file.
+
+% !TEX TS-program = XeLaTeX
+% !TEX encoding = UTF-8 Unicode
+% !TEX spellverify = gr-GR
+
+\documentclass[10pt]{article}
+\usepackage[a4paper, margin=1.5cm]{geometry}
+\usepackage{polyglossia}
+\usepackage{fontspec}
+\usepackage{moresize}
+\usepackage{minted}
 \usepackage{amsmath}
-\usepackage{amssymb}
+\usepackage{paracol}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{fp}
+\usepackage{fontawesome}
 \usepackage[hidelinks]{hyperref}
-\usepackage{textcomp}
-\usepackage[utf8]{inputenc}
-\textheight=10in
-\pagestyle{empty}
-\raggedright
-\usepackage[left=0.5in,right=0.5in,bottom=0.5in,top=0.5in]{geometry}
 
-% FONT OPTIONS
-\usepackage[default]{inter}
-% END FONT OPTIONS
+% provides \isempty test
+\usepackage{xstring, xifthen}
 
-% HYPERREF OPTIONS
+%---------------- Show page layout. Don't use in a real document!
+\usepackage{showframe}
+\renewcommand\ShowFrameLinethickness{0.15pt}
+\renewcommand*\ShowFrameColor{\color{red}}
+%---------------------------------------------------------------%
+
+% debugging
+% \usepackage{showframe}
+
+% tikz stuff
+\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+
+% polyglossia stuff
+% \setdefaultlanguage{greek}
+% \setotherlanguage{english}
+
+% \newfontfamily\greekfont{JetBrains Mono Nerd Font}
+% \newfontfamily\greekfontsf{JetBrains Mono Nerd Font}
+\setmainfont{Inter}
+\setsansfont{Inter}
+\setmonofont{JetBrains Mono Nerd Font}
+
+% paragraph stuff
+\setlength{\parindent}{0cm}
+
+% color stuff
+\definecolor{light}{HTML}{F3F3F3}
+\definecolor{dark}{HTML}{303030}
+\definecolor{violet}{HTML}{646CFF}
+\definecolor{blue}{HTML}{0078D4}
+\definecolor{green}{HTML}{41B883}
+\pagecolor{light}
+
+% hyperref stuff
 \hypersetup{
 	colorlinks=true,
-	linkcolor=blue,
-	citecolor=blue,
-	urlcolor=blue
+	linkcolor=violet,
+	filecolor=blue,
+	urlcolor=violet,
+	pdfpagemode=FullScreen,
 }
-% END HYPERREF OPTIONS
 
-\def\bull{\vrule height 0.8ex width .7ex depth -.1ex }
-% DEFINITIONS FOR RESUME
-\newcommand{\lineunder} {
-	\vspace*{-8pt} \\
-	\hspace*{-18pt} \hrulefill \\
+% returns minipage width minus three times \fboxsep
+% to keep padding included in width calculations
+% can also be used for other boxes / environments
+\newcommand{\mpwidth}{\linewidth-2\fboxsep}
+
+% centers text vertically in line: https://tex.stackexchange.com/a/17102
+% param 1: any
+\newcommand{\vcenteredhbox}[1]{\ensuremath{\vcenter{\hbox{#1}}}}
+
+% base class to wrap any text based stuff here. Renders like a paragraph.
+% Allows complex commands to be passed, too.
+% param 1: *any
+\newcommand{\cvtext}[1]{
+	\noindent
+	\begin{flushleft}
+		\textbf{\LARGE{\textcolor{dark}{#1}}}
+	\end{flushleft}
+	% \begin{tabular*}{1\mpwidth}{p{\mpwidth}}
+	% 	\parbox{1\mpwidth}{#1}
+	% \end{tabular*}
 }
-\newcommand{\header} [1] {
-	\vspace*{6mm}
-	{\hspace*{-18pt}\vspace*{6pt} #1}
-	\vspace*{-6pt} \lineunder
+
+% Renders a a CV section headline with a nice underline in accent color.
+% param 1: section title
+\newcommand{\cvsection}[1] {
+	% \vspace{0.6cm}
+	\cvtext{
+		#1
+		\vspace*{-0.81cm}
+		\begin{flushleft}
+			\begin{tikzpicture}[scale=1,rounded corners=1.5pt,very thin]
+				\fill [light] (0,0) rectangle (1, 0.09);
+				\fill [green] (0,0) rectangle (2, 0.09);
+			\end{tikzpicture}%
+		\end{flushleft}
+	}
 }
-\newcommand{\education}[4]{ % Define a new command with 4 arguments
-	\paragraph{#1} \hfill #3 \\ % Title and place
-	#2 \hfill #4 \\ % Description and dates
+
+% Renders a button.
+% param 1: link
+% param 2: icon
+% param 3: icon size
+\newcommand{\button}[3]{
+	\href{#1}{\textcolor{violet}{\vcenteredhbox{#3#2}}}
 }
-\newcommand{\workexperience}[5]{ % Define a new command with 4 arguments
-	\paragraph{#1} \hfill #2 \\ % Title and place
-	\textit{#3} \hfill #4 \\ % Short Description and dates
-	#5 % Description
+
+% Renders an active social media button.
+% param 1: link
+% param 2: icon
+\newcommand{\socialmediabutton}[2]{
+	\button{#1}{#2}{\HUGE}\tiny
 }
-\newcommand{\project}[4]{%
-	\paragraph{#1} \hfill #4 \\
-	\textit{#2} \\
-	#3 \\
+
+% Renders an external link button.
+% param 1: link
+\newcommand{\externallinkbutton}[1]{
+	\button{#1}{\faExternalLinkSquare}{\large}\tiny
 }
-\newcommand{\award}[4]{%
-	\paragraph{#1} \hfill #2 \\
-	#3\hfill #4\\
+
+% Renders a progress-bar to indicate a certain skill in percent.
+% param 1: name of the skill / tech / etc.
+% param 2: year (e.g., 2018)
+\newcommand{\cvskill}[3] {
+	% Calculate age based on the year provided
+	\newcount\currentyear
+	\currentyear=\the\year
+	\advance\currentyear by -#3
+	% Calculate percentage based on the current year
+	\newcount\agepercent
+	\agepercent=\the\currentyear
+	\divide\agepercent by \the\currentyear
+	\noindent
+	\normalsize
+	\parbox{\mpwidth}{
+		\textcolor{dark}{\textbf{#1}}\hfill\textcolor{green}{\the\currentyear+ years}\\[0.18cm]
+		\textcolor{dark}{#2}\\[0.18cm]
+	}
+	% \indent
+	% \begin{tabular}{r}
+	% 	\begin{tikzpicture}[scale=1,rounded corners=2.1pt,very thin]
+	% 		\fill [light] (0,0) rectangle (1\mpwidth, 0.15);
+	% 		\fill [green] (0,0) rectangle (\agepercent\mpwidth, 0.15);
+	% 	\end{tikzpicture}%
+	% \end{tabular}
+	\\[0.3cm]
 }
-\newcommand{\socialmediabutton}[2]{%
-	\href{#1}{#2}
+
+% Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
+% is glued together when a pagebreak appears).
+% Additional Information can be passed in text or list form (or other environments).
+% the work you did
+% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
+% param 2: event name (job position etc.)
+% param 3: Customer, Employer, Industry
+% param 4: Short description
+% param 5: Notes
+\newcommand{\cvevent}[5] {
+	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
+	% if you need more control on page breaks, remove the parbox
+	\noindent
+	\normalsize
+	\parbox{\mpwidth}{
+		\ifthenelse{\isempty{#2}}{}{\textbf{#2}\hfill}
+		\ifthenelse{\isempty{#1}}{}{\colorbox{green}{\textcolor{white}{#1}}}%
+		\ifthenelse{\isempty{#3}}{}{\\\textit{#3}}
+		\ifthenelse{\isempty{#4}}{}{\\#4}
+		\ifthenelse{\isempty{#5}}{}{\\\textit{#5}}
+	}
+	\\[0.42cm]
 }
-% END RESUME DEFINITIONS
+
+% Renders the title of the CV.
+% param 1: full name
+% param 2: occupation
+\newcommand{\cvtitle}[2]{
+	\noindent
+	\huge\textbf{\textcolor{dark}{#1}}
+	\\[-1.2cm]
+	\begin{flushleft}
+		\begin{tikzpicture}[scale=1,rounded corners=1.5pt,very thin]
+			\fill [light] (0,0) rectangle (1, 0.09);
+			\fill [green] (0,0) rectangle (2, 0.09);
+		\end{tikzpicture}%
+	\end{flushleft}
+	\large#2
+}
+
+\newcommand{\selfie}{
+	\includegraphics[width=\mpwidth]{selfie.png}
+}
+
+% remove page numbering
+\pagenumbering{gobble}
 
 \begin{document}
-\vspace*{-30pt}
-
-%==== Profile ====%
-\begin{center}
-	{\Huge {Michail Anargyros Zamagias}} \\\vspace*{2mm}
-	23 years old $\cdot$
-	Heraklion, Greece $\cdot$
-	\socialmediabutton{mailto:contact@mikezamayias.com}{Email}$\cdot$
-	\socialmediabutton{https://linkedin.com/in/mikezamayias}{LinkedIn}$\cdot$
-	\socialmediabutton{https://mikezamayias.com}{Website}
-\end{center}
-
-%==== Education ====%
-\header{Education}
-\education
-{Bachelors in Informatics Engineering, TEI of Crete}
-{Undergraduate Student}
-{Heraklion, Greece}
-{Oct 2018 - Present}
-
-%==== Experience ====%
-\header{Work Experience}
-\workexperience
-{Software Engineering Intern at TEI of Crete}
-{Heraklion, Greece}
-{He architected a mobile application project from start to finish.}
-{May 2023 - Nov 2023}
-{
-	\begin{itemize} \itemsep 1pt
-		\item The application (named \textit{Healpen}) is a journal that allows users to express their feelings and thoughts. It also performs sentiment analysis on their entries, providing data for visualizing their mood.
-		\item Designed the application in Figma, developed it using Flutter, implemented CI/CD using GitHub Actions, and utilized Firebase for the back-end and Google's Natural Language API for sentiment analysis.
-	\end{itemize}
-}
-\workexperience
-{Main and Pool Bar Waiter at Mitsis "Ramira" Beach Hotel}
-{Kos, Greece}
-{He assisted in daily operations during high-traffic periods.}
-{Aug 2022}
-{
-	\begin{itemize} \itemsep 1pt
-		\item He supported team members during peak hours to maintain operations.
-		\item He handled customer interactions in a busy setting.
-	\end{itemize}
-}
-\workexperience
-{Flutter Developer at atFirstSite}
-{Heraklion, Greece}
-{Worked and helped develop an app for a startup.}
-{Jun 2021 - Sep 2023}
-{
-	\begin{itemize} \itemsep 1pt
-		\item He redesigned the front end of a dating app using Flutter.
-		\item He refactored the codebase to improve performance and stability.
-		\item He collaborated with the back-end team to ensure seamless integration of new features.
-	\end{itemize}
-}
-\workexperience
-{Main Bar Waiter Assistant at Mitsis "Ramira" Beach Hotel}
-{Kos, Greece}
-{He aided in ensuring a positive customer experience.}
-{Aug 2019}
-{
-	\begin{itemize} \itemsep 1pt
-		\item He assisted staff during busy hours to maintain a pleasant environment for guests.
-		\item He supported team members in daily operations.
-	\end{itemize}
-}
-
-%==== Skills ====%
-\header{Skills}
-\vspace*{6mm}
-\begin{tabular}{ l l }
-	Programming Languages: & Python, Dart, Typescript, Shell, Yaml                          \\
-	Frameworks:            & Anaconda, Flutter, Nuxt3, TailwindCSS, GitHub Actions,         \\ & SOLID Principles, OOP \\
-	Tools:                 & Git, GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs, \\ & ChatGPT, GitHub Copilot \\
-	Computer Proficiency:  & Software architecture, Flutter Development                     \\
-\end{tabular}
-
-\newpage
-\vspace*{-30pt}
-
-%==== Projects ====%
-\header{Projects}
-\project
-{\href
-	{https://github.com/mikezamayias/healpen}
-	{Healpen}
-}
-{Flutter, Full Stack, Firebase, Rive, CI/CD, UI Design}
-{Clinical studies have shown that "expressive writing" can improve emotional well-being. With Healpen, users can freely express their thoughts and emotions through journaling. Healpen uses sentiment analysis to generate mood-based data visualizations from users' journal entries. The application, which utilizes Flutter and Firebase, was designed in Figma, and GitHub Actions manages its CI/CD pipeline.}
-{May 2023 - Present}
-\project
-{\href
-	{https://mikezamayias.com}
-	{mikezamayias.com}
-}
-{Nuxt3, TailwindCSS, Cloudflare, Firebase, CI/CD}
-{He used Nuxt3 and TailwindCSS to create and design my website. I successfully deployed it through Firebase Hosting and established a CI/CD pipeline through GitHub Actions. Moreover, I configured Cloudflare for domain name management.}
-{Jan 2023 - Present}
-\project
-{\href
-	{https://github.com/mikezamayias/ehealth_services_semester_project}
-	{ehealth\_services\_semester\_project}
-}
-{Flutter, Fitness Tracker, Health Data}
-{He developed an application for visualizing data on sleep, heart rate, steps, and calories from a fitness tracker.}
-{Jan 2021 - Jan 2021}
-
-%==== Awards ====%
-\header{Awards}
-\award
-{ATHENA Student Hackathon}
-{First Place Certificate}
-{He and his team developed an innovative solution for responsible consumption and production.}
-{April 2023}
-
+\columnratio{0.42}
+\setlength{\columnsep}{3em}
+\setlength{\columnseprule}{6pt}
+\colseprulecolor{green}
+\begin{paracol}{2}
+	\begin{leftcolumn}
+		\vspace*{0.42cm}
+		\cvtitle{Michail Anargyros\\Zamagias}{
+			\parbox{\mpwidth}{
+				Dear Hiring Manager,\\[0.3cm]
+				I am an undergraduate student in Informatics Engineering at TEI of Crete, nearing the completion of my degree. I have a strong foundation in software development, particularly in Flutter and Firebase as I have been working with them for the past two years. I am passionate about innovative technology and I am eager to apply my skills to contribute effectively to your team.\\[0.3cm]
+				My experience as a Software Engineering Intern at TEI of Crete allowed me to architect and develop the \textit{Healpen} application, a project that harnesses the power of sentiment analysis to aid users in expressing their thoughts and emotions. This project not only honed my technical skills but also demonstrated my ability to manage a complete software lifecycle from conception to deployment.\\[0.3cm]
+				Additionally, my participation in hackathons, including a first-place finish at the ATHENA Student Hackathon, showcases my problem-solving capabilities and teamwork skills. I am keen to apply my software development expertise and innovative approach to contribute effectively to your team.\\[0.3cm]
+				Sincerely,\\[0.3cm]
+				Mike Zamagias
+			}
+		}
+		\vfill\null
+		\cvsection{Contact}
+		\begin{flushleft}
+			\setlength{\tabcolsep}{0.1cm} % Set the gap between items to 0.1cm
+			\begin{tabular}{llllll}
+				\socialmediabutton{tel:+306942422485}{\faPhoneSquare}                        &
+				\socialmediabutton{mailto:contact@mikezamayias.com}{\faEnvelopeSquare}       &
+				\socialmediabutton{https://linkedin.com/in/mikezamayias/}{\faLinkedinSquare} &
+				\socialmediabutton{https://github.com/mikezamayias}{\faGithubSquare}         &
+				\socialmediabutton{https://mikezamayias.com}{\faGlobe}                       &
+			\end{tabular}
+		\end{flushleft}
+		\newpage
+		\cvsection{Skills}
+		\cvskill{Programming Languages}{Python, Shell, Dart, Yaml, TypeScript}{2017}
+		\cvskill{Tools}{Git, GitHub, Tower, Figma, Visual Studio Code, JetBrains IDEs}{2017}
+		\cvskill{Frameworks}{Anaconda, Flutter, Nuxt3, TailwindCSS, GitHub Actions}{2019}
+		\cvskill{Computer Proficiency}{Software architecture, Flutter Development}{2019}
+		\vfill\null
+		% Awards Section
+		\cvsection{Awards}
+		% New awards
+		\cvevent
+		{Apr 2023}
+		{Student Hackathon}
+		{First ATHENA Student Hackathon}
+		{First place for innovative solution in responsible consumption and production}
+		{}
+	\end{leftcolumn}
+	\begin{rightcolumn}
+		\vspace*{0.42cm}
+		\cvsection{Education}
+		\cvevent
+		{2018 - present}
+		{BSc Informatics Engineering,\\TEI of Crete}
+		{Heraklion, Greece}
+		{Specialization: Software Engineering}
+		{}
+		\cvevent
+		{14/06/2018}
+		{General Lyceum of Kos\\"Odysseas Elytis"}
+		{Kos, Greece}
+		{Grade: Very Good (17.3/20)}
+		{\href{https://drive.google.com/file/d/1N7O_5-ysh0rsrD5t_r9FQwRoQxkAag6_/view}{General Lyceum Certificate}}
+		\cvevent
+		{23/05/2015}
+		{ECCE B2}
+		{Kos, Greece}
+		{Grade: PASS}
+		{\href{https://drive.google.com/file/d/1I111gvvsEiY88U4-dooUpVSacpRH6nDA/view}{Certificate}, \href{https://drive.google.com/file/d/1NZyxrZrtbMhuUdYUVoCGei3wt2vjQEja/view}{Report}}
+		\vfill\null
+		\cvsection{Work}
+		\cvevent
+		{May 2023 - Nov 2023}
+		{Software Engineering Intern\\TEI of Crete}
+		{Heraklion, Greece}
+		{Architected a mobile application project from start to finish. The application, named \textit{Healpen}, allows users to express their feelings and thoughts. It also performs sentiment analysis on their entries, providing data for visualizing their mood.}
+		{}
+		\cvevent
+		{Aug 2021}
+		{Mitsis "Ramira" Beach Hotel}
+		{Kos, Greece}
+		{Waiter}
+		{}
+		\cvevent
+		{May 2021 - Sep 2023}
+		{Start Up}
+		{Heraklion, Greece}
+		{Rearchitected and redesigned the front end of a dating app, refactored the codebase, and collaborated with the back-end team to implement back-end features}
+		{}
+		% {\href{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}{Work Experience Certificate}}
+		\cvevent
+		{Aug 2019}
+		{Mitsis "Ramira" Beach Hotel}
+		{Kos, Greece}
+		{Waiter Assistant}
+		{\href{https://drive.google.com/file/d/1-TOhrADrFBGMzvOsNsj5AWfALbk_cBPh/view?usp=sharing}{Work Experience Certificate}}
+		\newpage
+		\cvsection{University Work}
+		\cvevent
+		{2023}
+		{\href{https://github.com/mikezamayias/healpen}{Healpen}}
+		{Flutter, Full Stack, Firebase, Rive, CI/CD, UI Design}
+		{Clinical studies have shown that "expressive writing" can improve emotional well-being. With Healpen, users can freely express their thoughts and emotions through journaling. Healpen uses sentiment analysis to generate mood-based data visualizations from users' journal entries.}
+		{}
+		\cvevent
+		{2021}
+		{\href{https://github.com/mzamayias/flutter_ecommerce_website_demo}{flutter\_ecommerce\_website\_demo}}
+		{Dart, Flutter}
+		{E-commerce website. The frontend is made with Flutter and the backend (user authentication, database) with Firebase. A simple CI/CD pipeline by GitHub Actions is used to deploy the website.}
+		{The website is available \href{https://flutter-ecommerce-website-demo.web.app/}{here}.}
+		\cvevent
+		{2021}
+		{\href{https://github.com/mzamayias/qrapp}{qrapp}}
+		{Dart, Flutter}
+		{Android and iOS application for scanning and creating QR codes, while also keeping their history.}
+		{}
+		\cvevent
+		{2020}
+		{\href{https://github.com/mzamayias/game_2048}{game\_2048}}
+		{Dart, Flutter}
+		% {Android και iOS εφαρμογη για υλοποίηση του παιχνιδιού \href{https://play2048.co}{2048}.}
+		{Implementation of the game \href{https://play2048.co}{2048} using Flutter for Android and iOS.}
+		{}
+		\cvevent
+		{2020}
+		{\href{https://github.com/mzamayias/ehealth_services_semester_project}{ehealth\_services\_semester\_project}}
+		{Dart, Flutter}
+		{Android and iOS application for data visualization of sleep, heart rate, steps and calories from a fitness tracker.}
+		{}
+		\newpage
+	\end{rightcolumn}
+\end{paracol}
 \end{document}
+
+% \documentclass[a4paper, 11pt]{article}
+% \usepackage{fullpage}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage[hidelinks]{hyperref}
+% \usepackage{textcomp}
+% \usepackage[utf8]{inputenc}
+% \textheight=10in
+% \pagestyle{empty}
+% \raggedright
+% \usepackage[left=0.5in,right=0.5in,bottom=0.5in,top=0.5in]{geometry}
+
+% % FONT OPTIONS
+% \usepackage[default]{inter}
+% % END FONT OPTIONS
+
+% % HYPERREF OPTIONS
+% \hypersetup{
+% 	colorlinks=true,
+% 	linkcolor=blue,
+% 	citecolor=blue,
+% 	urlcolor=blue
+% }
+% % END HYPERREF OPTIONS
+
+% \def\bull{\vrule height 0.8ex width .7ex depth -.1ex }
+% % DEFINITIONS FOR RESUME
+% \newcommand{\lineunder} {
+% 	\vspace*{-8pt} \\
+% 	\hspace*{-18pt} \hrulefill \\
+% }
+% \newcommand{\header} [1] {
+% 	\vspace*{6mm}
+% 	{\hspace*{-18pt}\vspace*{6pt} #1}
+% 	\vspace*{-6pt} \lineunder
+% }
+% \newcommand{\education}[4]{ % Define a new command with 4 arguments
+% 	\paragraph{#1} \hfill #3 \\ % Title and place
+% 	#2 \hfill #4 \\ % Description and dates
+% }
+% \newcommand{\workexperience}[5]{ % Define a new command with 4 arguments
+% 	\paragraph{#1} \hfill #2 \\ % Title and place
+% 	\textit{#3} \hfill #4 \\ % Short Description and dates
+% 	#5 % Description
+% }
+% \newcommand{\project}[4]{%
+% 	\paragraph{#1} \hfill #4 \\
+% 	\textit{#2} \\
+% 	#3 \\
+% }
+% \newcommand{\award}[4]{%
+% 	\paragraph{#1} \hfill #2 \\
+% 	#3\hfill #4\\
+% }
+% \newcommand{\socialmediabutton}[2]{%
+% 	\href{#1}{#2}
+% }
+% % END RESUME DEFINITIONS
+
+% \begin{document}
+% \vspace*{-30pt}
+
+% %==== Profile ====%
+% \begin{center}
+% 	{\Huge {Michail Anargyros Zamagias}} \\\vspace*{2mm}
+% 	23 years old $\cdot$
+% 	Heraklion, Greece $\cdot$
+% 	\socialmediabutton{mailto:contact@mikezamayias.com}{Email}$\cdot$
+% 	\socialmediabutton{https://linkedin.com/in/mikezamayias}{LinkedIn}$\cdot$
+% 	\socialmediabutton{https://mikezamayias.com}{Website}
+% \end{center}
+
+% %==== Education ====%
+% \header{Education}
+% \education
+% {Bachelors in Informatics Engineering, TEI of Crete}
+% {Undergraduate Student}
+% {Heraklion, Greece}
+% {Oct 2018 - Present}
+
+% %==== Experience ====%
+% \header{Work Experience}
+% \workexperience
+% {Software Engineering Intern at TEI of Crete}
+% {Heraklion, Greece}
+% {He architected a mobile application project from start to finish.}
+% {May 2023 - Nov 2023}
+% {
+% 	\begin{itemize} \itemsep 1pt
+% 		\item The application (named \textit{Healpen}) is a journal that allows users to express their feelings and thoughts. It also performs sentiment analysis on their entries, providing data for visualizing their mood.
+% 		\item Designed the application in Figma, developed it using Flutter, implemented CI/CD using GitHub Actions, and utilized Firebase for the back-end and Google's Natural Language API for sentiment analysis.
+% 	\end{itemize}
+% }
+% \workexperience
+% {Main and Pool Bar Waiter at Mitsis "Ramira" Beach Hotel}
+% {Kos, Greece}
+% {He assisted in daily operations during high-traffic periods.}
+% {Aug 2022}
+% {
+% 	\begin{itemize} \itemsep 1pt
+% 		\item He supported team members during peak hours to maintain operations.
+% 		\item He handled customer interactions in a busy setting.
+% 	\end{itemize}
+% }
+% \workexperience
+% {Flutter Developer at atFirstSite}
+% {Heraklion, Greece}
+% {Worked and helped develop an app for a startup.}
+% {Jun 2021 - Sep 2023}
+% {
+% 	\begin{itemize} \itemsep 1pt
+% 		\item He redesigned the front end of a dating app using Flutter.
+% 		\item He refactored the codebase to improve performance and stability.
+% 		\item He collaborated with the back-end team to ensure seamless integration of new features.
+% 	\end{itemize}
+% }
+% \workexperience
+% {Main Bar Waiter Assistant at Mitsis "Ramira" Beach Hotel}
+% {Kos, Greece}
+% {He aided in ensuring a positive customer experience.}
+% {Aug 2019}
+% {
+% 	\begin{itemize} \itemsep 1pt
+% 		\item He assisted staff during busy hours to maintain a pleasant environment for guests.
+% 		\item He supported team members in daily operations.
+% 	\end{itemize}
+% }
+
+% %==== Skills ====%
+% \header{Skills}
+% \vspace*{6mm}
+% \begin{tabular}{ l l }
+% 	Programming Languages: & Python, Dart, Typescript, Shell, Yaml                          \\
+% 	Frameworks:            & Anaconda, Flutter, Nuxt3, TailwindCSS, GitHub Actions,         \\ & SOLID Principles, OOP \\
+% 	Tools:                 & Git, GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs, \\ & ChatGPT, GitHub Copilot \\
+% 	Computer Proficiency:  & Software architecture, Flutter Development                     \\
+% \end{tabular}
+
+% \newpage
+% \vspace*{-30pt}
+
+% %==== Projects ====%
+% \header{Projects}
+% \project
+% {\href
+% 	{https://github.com/mikezamayias/healpen}
+% 	{Healpen}
+% }
+% {Flutter, Full Stack, Firebase, Rive, CI/CD, UI Design}
+% {Clinical studies have shown that "expressive writing" can improve emotional well-being. With Healpen, users can freely express their thoughts and emotions through journaling. Healpen uses sentiment analysis to generate mood-based data visualizations from users' journal entries. The application, which utilizes Flutter and Firebase, was designed in Figma, and GitHub Actions manages its CI/CD pipeline.}
+% {May 2023 - Present}
+% \project
+% {\href
+% 	{https://mikezamayias.com}
+% 	{mikezamayias.com}
+% }
+% {Nuxt3, TailwindCSS, Cloudflare, Firebase, CI/CD}
+% {He used Nuxt3 and TailwindCSS to create and design my website. I successfully deployed it through Firebase Hosting and established a CI/CD pipeline through GitHub Actions. Moreover, I configured Cloudflare for domain name management.}
+% {Jan 2023 - Present}
+% \project
+% {\href
+% 	{https://github.com/mikezamayias/ehealth_services_semester_project}
+% 	{ehealth\_services\_semester\_project}
+% }
+% {Flutter, Fitness Tracker, Health Data}
+% {He developed an application for visualizing data on sleep, heart rate, steps, and calories from a fitness tracker.}
+% {Jan 2021 - Jan 2021}
+
+% %==== Awards ====%
+% \header{Awards}
+% \award
+% {ATHENA Student Hackathon}
+% {First Place Certificate}
+% {He and his team developed an innovative solution for responsible consumption and production.}
+% {April 2023}
+
+% \end{document}
