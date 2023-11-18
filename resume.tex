@@ -141,7 +141,7 @@
 	\noindent
 	\normalsize
 	\parbox{\mpwidth}{
-		\textcolor{dark}{\textbf{#1}}\hfill\textcolor{green}{\the\currentyear+ years}\\[0.18cm]
+		\textcolor{dark}{\textbf{#1}}\hfill\colorbox{green}{\textcolor{white}{\texttt{\the\currentyear+ years}}}\\[0.18cm]
 		\textcolor{dark}{#2}\\[0.18cm]
 	}
 	% \indent
@@ -170,7 +170,7 @@
 	\normalsize
 	\parbox{\mpwidth}{
 		\ifthenelse{\isempty{#2}}{}{\textbf{#2}\hfill}
-		\ifthenelse{\isempty{#1}}{}{\colorbox{green}{\textcolor{white}{#1}}}%
+		\ifthenelse{\isempty{#1}}{}{\colorbox{green}{\textcolor{white}{\texttt{#1}}}}%
 		\ifthenelse{\isempty{#3}}{}{\\\textit{#3}}
 		\ifthenelse{\isempty{#4}}{}{\\#4}
 		\ifthenelse{\isempty{#5}}{}{\\\textit{#5}}
@@ -209,31 +209,31 @@
 \begin{paracol}{2}
 	\begin{leftcolumn}
 		\cvtitle{Michail Anargyros\\Zamagias}{
-			\parbox{\mpwidth}{
-				Dear Hiring Manager,\\[0.3cm]
-				I am an undergraduate student in Informatics Engineering at TEI of Crete, nearing the completion of my degree. I have a strong foundation in software development, particularly in Flutter and Firebase as I have been working with them for the past three years.\\[0.3cm]
-				As a Software Engineering Intern at TEI of Crete, I architected and developed the \textit{Healpen} application, a project that aids users in expressing their thoughts and emotions. It enables the \textit{expressive writing method} and provides the users with insightful visualizations on their mood by performing sentiment analysis on their writing entries. This project not only honed my technical skills but also demonstrated my ability to manage a complete software lifecycle from conception to deployment.\\[0.3cm]
-				Additionally, my participation in hackathons, including a first-place finish at the ATHENA Student Hackathon, showcases my problem-solving capabilities and teamwork skills. I am keen to apply my software development expertise and innovative approach to contribute effectively to your team.\\[0.3cm]
-				Sincerely,\\[0.3cm]
-				Mike Zamagias
-			}
+			\begin{flushleft}
+				\setlength{\tabcolsep}{0.1cm} % Set the gap between items to 0.1cm
+				\begin{tabular}{llllll}
+					\socialmediabutton{tel:+306942422485}{\faPhoneSquare}                        &
+					\socialmediabutton{mailto:contact@mikezamayias.com}{\faEnvelopeSquare}       &
+					\socialmediabutton{https://linkedin.com/in/mikezamayias/}{\faLinkedinSquare} &
+					\socialmediabutton{https://github.com/mikezamayias}{\faGithubSquare}         &
+					\socialmediabutton{https://mikezamayias.com}{\faGlobe}                       &
+				\end{tabular}
+			\end{flushleft}
 		}
 		\vfill\null
-		\cvsection{Contact}
-		\begin{flushleft}
-			\setlength{\tabcolsep}{0.1cm} % Set the gap between items to 0.1cm
-			\begin{tabular}{llllll}
-				\socialmediabutton{tel:+306942422485}{\faPhoneSquare}                        &
-				\socialmediabutton{mailto:contact@mikezamayias.com}{\faEnvelopeSquare}       &
-				\socialmediabutton{https://linkedin.com/in/mikezamayias/}{\faLinkedinSquare} &
-				\socialmediabutton{https://github.com/mikezamayias}{\faGithubSquare}         &
-				\socialmediabutton{https://mikezamayias.com}{\faGlobe}                       &
-			\end{tabular}
-		\end{flushleft}
+		\cvsection{Cover Letter}
+		\parbox{\mpwidth}{
+			Dear Hiring Manager,\\[0.3cm]
+			I am an undergraduate student in Informatics Engineering at TEI of Crete, nearing the completion of my degree. I have a strong foundation in software development, particularly in Flutter and Firebase as I have been working with them for the past three years.\\[0.3cm]
+			As a Software Engineering Intern at TEI of Crete, I architected and developed the \textit{Healpen} application, a project that aids users in expressing their thoughts and emotions. It enables the \textit{expressive writing method} and provides the users with insightful visualizations on their mood by performing sentiment analysis on their writing entries. This project not only honed my technical skills but also demonstrated my ability to manage a complete software lifecycle from conception to deployment.\\[0.3cm]
+			Additionally, my participation in hackathons, including a first-place finish at the ATHENA Student Hackathon, showcases my problem-solving capabilities and teamwork skills. I am keen to apply my software development expertise and innovative approach to contribute effectively to your team.\\[0.3cm]
+			Sincerely,\\
+			Mike
+		}
 		\newpage
 		\cvsection{Skills}
 		\cvskill{Programming Languages}{Python, Shell, Dart, Yaml, TypeScript}{2017}
-		\cvskill{Frameworks}{Anaconda, Flutter, Nuxt3, TailwindCSS, GitHub Actions}{2020}
+		\cvskill{Frameworks}{Anaconda, Flutter, GitHub Actions, Nuxt3, TailwindCSS}{2020}
 		\cvskill{Tools}{Git, GitHub, Tower, Figma, Visual Studio Code, JetBrains IDEs}{2017}
 		\cvskill{Computer Proficiency}{Software Architecture, Flutter Development}{2020}
 		\vfill\null
@@ -249,19 +249,19 @@
 	\begin{rightcolumn}
 		\cvsection{Education}
 		\cvevent
-		{2018 - present}
+		{Oct 2018 - present}
 		{BSc Informatics Engineering,\\TEI of Crete}
 		{Heraklion, Greece}
 		{Specialization: Software Engineering}
 		{}
 		\cvevent
-		{14/06/2018}
+		{Jun 2018}
 		{General Lyceum of Kos\\"Odysseas Elytis"}
 		{Kos, Greece}
 		{Grade: Very Good (17.3/20)}
 		{\href{https://drive.google.com/file/d/1N7O_5-ysh0rsrD5t_r9FQwRoQxkAag6_/view}{General Lyceum Certificate}}
 		\cvevent
-		{23/05/2015}
+		{May 2015}
 		{ECCE B2}
 		{Kos, Greece}
 		{Grade: PASS}
