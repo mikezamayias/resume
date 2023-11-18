@@ -35,7 +35,7 @@
 % \usepackage{showframe}
 
 % tikz stuff
-\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+\usetikzlibrary{shapes, backgrounds, mindmap, trees}
 
 % polyglossia stuff
 % \setdefaultlanguage{greek}
@@ -76,7 +76,7 @@
 % param 1: any
 \newcommand{\vcenteredhbox}[1]{\ensuremath{\vcenter{\hbox{#1}}}}
 
-% base class to wrap any text based stuff here. Renders like a paragraph.
+% base class to wrap any text based stuff here. It rings like a paragraph.
 % Allows complex commands to be passed, too.
 % param 1: *any
 \newcommand{\cvtext}[1]{
@@ -155,17 +155,17 @@
 }
 
 % Renders a table and a paragraph (cvtext) wrapped in a parbox (to ensure minimum content
-% is glued together when a pagebreak appears).
+% is glued together when a page break appears).
 % Additional Information can be passed in text or list form (or other environments).
 % the work you did
-% param 1: time-frame i.e. Sep 14 - Jan 15 etc.
+% param 1: time-frame, i.e., Sep 14 - Jan 15, etc.
 % param 2: event name (job position etc.)
 % param 3: Customer, Employer, Industry
 % param 4: Short description
 % param 5: Notes
 \newcommand{\cvevent}[5] {
-	% we wrap this part in a parbox, so title and description are not separated on a pagebreak
-	% if you need more control on page breaks, remove the parbox
+	% We wrap this part in a parbox, so the title and description are not separated on a page break
+	% If you need more control on page breaks, remove the parbox
 	\noindent
 	\normalsize
 	\parbox{\mpwidth}{
@@ -305,13 +305,13 @@
 		{2021}
 		{\href{https://github.com/mzamayias/flutter_ecommerce_website_demo}{flutter\_ecommerce\_website\_demo}}
 		{Dart, Flutter}
-		{E-commerce website. The frontend is made with Flutter and the backend (user authentication, database) with Firebase. A simple CI/CD pipeline by GitHub Actions is used to deploy the website.}
+		{E-commerce website. The front end is made with Flutter, and the back end (user authentication, database) is with Firebase. A simple CI/CD pipeline by GitHub Actions is used to deploy the website.}
 		{The website is available \href{https://flutter-ecommerce-website-demo.web.app/}{here}.}
 		\cvevent
 		{2021}
 		{\href{https://github.com/mzamayias/qrapp}{qrapp}}
 		{Dart, Flutter}
-		{Android and iOS application for scanning and creating QR codes, while also keeping their history.}
+		{Mobile application for scanning and creating QR codes while keeping their history.}
 		{}
 		\cvevent
 		{2020}
@@ -324,7 +324,7 @@
 		{2020}
 		{\href{https://github.com/mzamayias/ehealth_services_semester_project}{ehealth\_services\_semester\_project}}
 		{Dart, Flutter}
-		{Android and iOS application for data visualization of sleep, heart rate, steps and calories from a fitness tracker.}
+		{Android and iOS application for data visualization of sleep, heart rate, steps, and calories from a fitness tracker.}
 		{}
 		\newpage
 	\end{rightcolumn}
