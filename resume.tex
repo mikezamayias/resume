@@ -13,6 +13,8 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{textcomp}
 \usepackage[utf8]{inputenc}
+\usepackage{ifthen}
+\usepackage{calc}
 \textheight=10in
 \pagestyle{empty}
 \raggedright
@@ -23,7 +25,7 @@
 % \setmainfont{American Typewriter} % meme font
 % \setmainfont{Maker Felt} % meme font
 % \setmainfont{Trattatello} % meme font
-\setmainfont{GFS Didot}
+% \setmainfont{GFS Didot}
 % END FONT OPTIONS
 
 % HYPERREF OPTIONS
@@ -47,18 +49,45 @@
     \vspace*{-6pt} \lineunder
 }
 \newcommand{\education}[4]{ % Define a new command with 4 arguments
-    \paragraph{#1} \hfill #3 \\ % Title and place
-    #2 \hfill #4 \\ % Description and dates
+    \vspace*{6pt} % Add some space after each education
+    \begin{minipage}[t]{0.75\textwidth}
+        {\Large \textbf{#1}} \\ % Title
+        \vspace*{2pt}
+        {\textbf{\textit{#2}}} \\ % Description
+    \end{minipage} \hfill
+    \begin{minipage}[t]{0.2\textwidth}
+        #3 \\ % Place
+        #4 \\ 
+    \end{minipage}
+    \vspace*{6pt} % Add some space after each education
 }
-\newcommand{\workexperience}[5]{ % Define a new command with 4 arguments
-    \paragraph{#1} \hfill #2 \\ % Title and place
-    \textit{#3} \hfill #4 \\ % Short Description and dates
-    #5 % Description
+\newcommand{\workexperience}[6]{ % Define a new command with 6 arguments
+    \vspace*{6pt} % Add some space after each work experience
+    \begin{minipage}[t]{0.75\textwidth}
+        {\Large \textbf{#1}} \\ % Job title
+        \vspace*{2pt}
+        {\textbf{\textit{#3}}} \\ % Short Description
+        #6 \\ % Description
+    \end{minipage} \hfill
+    \begin{minipage}[t]{0.2\textwidth}
+        #2 \\ % Place
+        \ifthenelse{\equal{#4}{#5}}{#4}{#4 - #5} \\ % Start date - End date
+    \end{minipage}
+    \vspace*{6pt} % Add some space after each work experience
 }
-\newcommand{\project}[4]{%
-    \paragraph{#1} \hfill #4 \\
-    \textit{#2} \\
-    #3 \\
+\newcommand{\project}[6]{%
+    \vspace*{6pt} % Add some space after each project
+    \begin{minipage}[t]{0.75\textwidth}
+        {\Large \textbf{#1}} \\ % Project title
+        \vspace*{2pt}
+        {\textbf{\textit{#3}}} \\ % Short Description
+        #6 \\ % Description
+    \end{minipage} \hfill
+    \begin{minipage}[t]{0.2\textwidth}
+        \ifthenelse{\equal{#4}{#5}}{#4}{#4 - #5} \\ % Start date - End date
+        #2 \\ % Technologies
+    \end{minipage}
+    \vspace*{6pt} % Add some space after each project
 }
 \newcommand{\award}[4]{%
     \paragraph{#1} \hfill #2 \\
@@ -75,7 +104,7 @@
 %==== Profile ====%
 \begin{center}
     {\Huge {Michail Anargyros Zamagias}} \\\vspace*{2mm}
-    23 years old $\cdot$
+    25 years old $\cdot$
     Heraklion, Greece $\cdot$
     \socialmediabutton{mailto:contact@mikezamayias.com}{Email}$\cdot$
     \socialmediabutton{https://linkedin.com/in/mikezamayias}{LinkedIn}$\cdot$
@@ -93,63 +122,60 @@
 %==== Experience ====%
 \header{Work Experience}
 \workexperience
-{Software Engineering Intern at TEI of Crete}
+{Junior Mobile Engineer, Deloitte}
 {Heraklion, Greece}
-{He architected a mobile application project from start to finish.}
-{May 2023 - Nov 2023}
+{Developing mobile applications using modern Android and cross-platform technologies.}
+{Feb 2024}
+{Present}
 {
-    \begin{itemize} \itemsep 1pt
-        \item The application (named \textit{Healpen}) is a journal that allows users to express their feelings and thoughts. It also performs sentiment analysis on their entries, providing data for visualizing their mood.
-        \item Designed the application in Figma, developed it using Flutter, implemented CI/CD using GitHub Actions, and utilized Firebase for the back-end and Google's Natural Language API for sentiment analysis.
-    \end{itemize}
+Developing enterprise mobile applications using Kotlin and Jetpack Compose for Android platforms, while also taking part in projects with Flutter. Collaborating with multidisciplinary teams to deliver high-quality mobile solutions for clients, implementing best practices in mobile development, and ensuring code quality through comprehensive testing and code reviews.
 }
 \workexperience
-{Main and Pool Bar Waiter at Mitsis "Ramira" Beach Hotel}
+{Flutter Engineering Intern, TEI of Crete}
+{Heraklion, Greece}
+{Architected and developed a complete mobile application project from conception to deployment.}
+{Jun 2023}
+{Nov 2023}
+{
+Led the development of Healpen, a mood-tracking journal application that combines user expression with sentiment analysis technology. Designed the complete user interface in Figma, implemented the application using Flutter framework, and integrated Firebase for backend services and Google's Natural Language API for sentiment analysis. Established a robust CI/CD pipeline using GitHub Actions to ensure continuous integration and deployment, delivering a polished product that demonstrates the intersection of mental health and technology.
+}
+\workexperience
+{Flutter Developer, atFirstSite}
+{Heraklion, Greece}
+{Contributed to mobile application development for an emerging startup.}
+{Jun 2021}
+{Sep 2023}
+{
+Redesigned and enhanced the user interface of a dating application using Flutter, focusing on improving user experience and visual appeal. Conducted comprehensive code refactoring to enhance application performance, stability, and maintainability. Worked closely with backend developers to ensure seamless integration of new features and API endpoints, while maintaining code quality standards throughout the development process.
+}
+\workexperience
+{Main and Pool Bar Waiter, Mitsis "Ramira" Beach Hotel}
 {Kos, Greece}
-{He assisted in daily operations during high-traffic periods.}
+{Provided exceptional customer service in a fast-paced hospitality environment.}
+{Aug 2022}
 {Aug 2022}
 {
-    \begin{itemize} \itemsep 1pt
-        \item He supported team members during peak hours to maintain operations.
-        \item He handled customer interactions in a busy setting.
-    \end{itemize}
+Delivered high-quality customer service in a busy resort setting, managing multiple responsibilities across main bar and pool bar operations. Demonstrated strong communication skills while interacting with international guests, maintained composure during peak hours, and collaborated effectively with team members to ensure smooth daily operations and positive guest experiences.
 }
 \workexperience
-{Flutter Developer at atFirstSite}
-{Heraklion, Greece}
-{Worked and helped develop an app for a startup.}
-{Jun 2021 - Sep 2023}
-{
-    \begin{itemize} \itemsep 1pt
-        \item He redesigned the front end of a dating app using Flutter.
-        \item He refactored the codebase to improve performance and stability.
-        \item He collaborated with the back-end team to ensure seamless integration of new features.
-    \end{itemize}
-}
-\workexperience
-{Main Bar Waiter Assistant at Mitsis "Ramira" Beach Hotel}
+{Main Bar Waiter Assistant, Mitsis "Ramira" Beach Hotel}
 {Kos, Greece}
-{He aided in ensuring a positive customer experience.}
+{Supported hospitality operations while developing customer service skills.}
+{Aug 2019}
 {Aug 2019}
 {
-    \begin{itemize} \itemsep 1pt
-        \item He assisted staff during busy hours to maintain a pleasant environment for guests.
-        \item He supported team members in daily operations.
-    \end{itemize}
+Assisted senior staff in maintaining high service standards during busy periods, contributing to a positive atmosphere for hotel guests. Gained valuable experience in teamwork, time management, and customer interaction while supporting daily bar operations. Developed strong interpersonal skills through direct guest interaction and learned to adapt quickly in a dynamic work environment.
 }
 
 %==== Skills ====%
 \header{Skills}
 \vspace*{6mm}
 \begin{tabular}{ l l }
-    Programming Languages: & Python, Dart, Typescript, Shell, Yaml                          \\
-    Frameworks:            & Anaconda, Flutter, Nuxt3, TailwindCSS, GitHub Actions,         \\ & SOLID Principles, OOP \\
-    Tools:                 & Git, GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs, \\ & ChatGPT, GitHub Copilot \\
-    Computer Proficiency:  & Software architecture, Flutter Development                     \\
+    Programming Languages: & Python, Dart, Typescript, Shell, Kotlin                          \\
+    Frameworks:            & Anaconda, Flutter, Nuxt3, TailwindCSS, GitHub Actions, Jetpack Compose         \\ & SOLID Principles, OOP \\
+    Tools:                 & Git, GitHub, Figma, Tower, Visual Studio Code, JetBrains IDEs, LLMs, \\ & Ollama, GitHub Copilot, Yaml, Google Cloud \\
+    Proficiency:  & Software architecture, Flutter Development                     \\
 \end{tabular}
-
-\newpage
-\vspace*{-30pt}
 
 %==== Projects ====%
 \header{Projects}
@@ -158,23 +184,50 @@
     {https://github.com/mikezamayias/healpen}
     {Healpen}
 }
-{Flutter, Full Stack, Firebase, Rive, CI/CD, UI Design}
-{Clinical studies have shown that "expressive writing" can improve emotional well-being. With Healpen, users can freely express their thoughts and emotions through journaling. Healpen uses sentiment analysis to generate mood-based data visualizations from users' journal entries. The application, which utilizes Flutter and Firebase, was designed in Figma, and GitHub Actions manages its CI/CD pipeline.}
-{May 2023 - Present}
+{Flutter, Rive, GitHub Actions, Firebase, Google Cloud}
+{A comprehensive mood-tracking journal application combining mental health awareness with modern technology.}
+{May 2023}
+{Nov 2023}
+{
+Developed a full-stack mobile application that leverages clinical research on expressive writing to improve emotional well-being. Implemented sentiment analysis using Google's Natural Language API to generate mood-based data visualizations from user journal entries. Designed the complete user interface in Figma, built the application using Flutter framework, and integrated Firebase for backend services. Established a robust CI/CD pipeline using GitHub Actions for continuous integration and deployment.
+}
+\project
+{\href
+    {https://mikezamayias.com/_nuxt/athena-hackathon-certificate.63ab3cc0.png}
+    {SustainaThreads - 1st ATHENA Hackathon Winner}
+}
+{Figma}
+{SDG 12: Sustainable Fashion Platform}
+{24th April 2023}
+{28th April 2023}
+{
+Led a collaborative team to design SustainaThreads, a personalized fashion recommendation platform addressing fast fashion's environmental impact. Worked with team members from multiple European universities in the ATHENA network to create a partnership framework connecting thrift stores with consumers, ultimately winning 1st place by contributing to SDG 12 (Responsible Consumption and Production) target: substantially reduce waste generation.
+}
+% {
+% Led a collaborative team to develop SustainaThreads, a personalized fashion recommendation platform addressing fast fashion's environmental impact. Worked with team members from multiple European universities in the ATHENA network to implement web scraping for clothing database creation, design keyword association algorithms for item matching, and build a ranking system for personalized recommendations. Collaborated on creating a partnership framework connecting thrift stores with consumers, ultimately winning 1st place by contributing to SDG 12 (Responsible Consumption and Production) target 12.5: substantially reduce waste generation.
+% }
 \project
 {\href
     {https://mikezamayias.com}
     {mikezamayias.com}
 }
-{Nuxt3, TailwindCSS, Cloudflare, Firebase, CI/CD}
-{He used Nuxt3 and TailwindCSS to create and design my website. I successfully deployed it through Firebase Hosting and established a CI/CD pipeline through GitHub Actions. Moreover, I configured Cloudflare for domain name management.}
-{Jan 2023 - Present}
+{Nuxt3, TailwindCSS, Cloudflare, Firebase, GitHub Actions}
+{Personal portfolio website showcasing professional experience and technical projects.}
+{Jan 2023}
+{Present}
+{
+Created and designed a modern, responsive personal website using Nuxt3 and TailwindCSS. Successfully deployed the application through Firebase Hosting and established a comprehensive CI/CD pipeline through GitHub Actions for automated deployments. Configured Cloudflare for domain name management, DNS optimization, and enhanced security features.
+}
 \project
 {\href
     {https://github.com/mikezamayias/ehealth_services_semester_project}
     {ehealth\_services\_semester\_project}
 }
-{Flutter, Fitness Tracker, Health Data}
-{He developed an application for visualizing data on sleep, heart rate, steps, and calories from a fitness tracker.}
-{Jan 2021 - Jan 2021}
+{Flutter, Health APIs}
+{Health data visualization application for fitness tracking and monitoring.}
+{Jan 2021}
+{Jan 2021}
+{
+Developed a comprehensive application for visualizing health and fitness data including sleep patterns, heart rate monitoring, step counting, and calorie tracking. Integrated with fitness tracker APIs to provide real-time data synchronization and created intuitive data visualization components to help users understand their health metrics and trends.
+}
 \end{document}
