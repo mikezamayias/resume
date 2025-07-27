@@ -15,9 +15,13 @@
 \usepackage[utf8]{inputenc}
 \usepackage{ifthen}
 \usepackage{calc}
+\usepackage{array}
 \textheight=10in
 \pagestyle{empty}
 \raggedright
+\tolerance=1000
+\emergencystretch=3em
+\hbadness=10000
 \usepackage[left=0.5in,right=0.5in,bottom=0.5in,top=0.5in]{geometry}
 
 % FONT OPTIONS
@@ -56,8 +60,10 @@
         {\textbf{\textit{#2}}} \\ % Description
     \end{minipage} \hfill
     \begin{minipage}[t]{0.2\textwidth}
-        #3 \\ % Place
-        #4 \\ 
+        \raggedleft
+        \sloppy
+        #3 \\
+        #4
     \end{minipage}
     \vspace*{6pt} % Add some space after each education
 }
@@ -70,8 +76,10 @@
         #6 \\ % Description
     \end{minipage} \hfill
     \begin{minipage}[t]{0.2\textwidth}
-        #2 \\ % Place
-        \ifthenelse{\equal{#4}{#5}}{#4}{#4 - #5} \\ % Start date - End date
+        \raggedleft
+        \sloppy
+        #2 \\
+        \ifthenelse{\equal{#4}{#5}}{#4}{#4 - #5}
     \end{minipage}
     \vspace*{6pt} % Add some space after each work experience
 }
@@ -84,8 +92,10 @@
         #6 \\ % Description
     \end{minipage} \hfill
     \begin{minipage}[t]{0.2\textwidth}
-        \ifthenelse{\equal{#4}{#5}}{#4}{#4 - #5} \\ % Start date - End date
-        #2 \\ % Technologies
+        \raggedleft
+        \sloppy
+        \ifthenelse{\equal{#4}{#5}}{#4}{#4 - #5} \\
+        #2
     \end{minipage}
     \vspace*{6pt} % Add some space after each project
 }
